@@ -1,7 +1,7 @@
 {
     "private": true,
     "scripts": {
-        "cleanup": "rm -rf public/css public/js public/mix-manifest.json",
+        "cleanup": "rm -rf public/css public/js",
         "dev": "npm run development",
         "development": "mix",
         "watch": "mix watch",
@@ -27,5 +27,9 @@
         "tailwindcss": "^3.1.0",
         "vue": "^3.2.31",
         "vue-loader": "^16.8.3"
+    },
+    "dependencies": {
+        "dayjs": "^1.11.8",
+        "vue-scheduler-lite": "^1.0.7"
     }
 }
