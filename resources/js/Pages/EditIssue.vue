@@ -2,31 +2,53 @@
 import AppHeader from '../Components/AppHeader.vue';
 import AppFooter from '../Components/AppFooter.vue';
 
-defineProps({
+const props = defineProps({
+  common: Object,
   type: String
-})
+});
+
+let title = "";
+
+if (props.type == "Create") {
+    title = "作成";
+} else if (props.type == "Edit") {
+    title = "編集";
+} else if (props.type == "View") {
+    title = "詳細";
+} else {
+    // do nothing
+}
 </script>
 
 <template>
-    <Head :title="`Backlog - ${type} Issue`" />
-    <AppHeader />
+    <Head :title="`Backlog - ${props.type} Issue`" />
+    <AppHeader :common="props.common" />
 
     <main class="container flex-1 py-5 mx-auto max-w-[1000px]">
-        <div class="bg-slate-100 py-2 px-3 my-2">
-            <div class="font-bold mb-2">課題{{ $title }}</div>
+        <div class="bg-slate-100 py-2 px-3 mt-2 mb-2">
+            <div class="font-bold mb-5">課題{{ title }}</div>
 
-            <div class="mb-2">
-                <select class="rounded py-1 min-w-[170px]" :disabled="type == 'View'">
-                    <option>種別を選択する</option>
-                </select>
+            <div class="mb-2 flex">
+                <div class="font-bold w-[120px]">状態</div>
+                <div class="flex-1">
+                    <select class="rounded py-1 min-w-[170px]" :disabled="props.type == 'View'">
+                        <option>種別を選択する</option>
+                    </select>
+                </div>
             </div>
 
-            <div class="mb-2">
-                <input type="text" placeholder="課題名" class="w-full rounded py-1" :disabled="type == 'View'">
+            <div class="mb-2 flex">
+                <div class="font-bold w-[120px]">課題名</div>
+                <div class="flex-1">
+                    <input type="text" placeholder="課題名" class="w-full rounded py-1" :disabled="props.type == 'View'">
+                </div>
             </div>
-
-            <div class="mb-2">
-                <textarea rows="5" placeholder="課題の詳細" class="w-full rounded py-1" :disabled="type == 'View'"></textarea>
+            
+            <div class="mb-2 flex">
+                <div class="font-bold w-[120px]">課題の詳細</div>
+                <div class="flex-1">
+                    <textarea rows="3" placeholder="課題の詳細" class="w-full rounded py-1" :disabled="props.type == 'View'"></textarea>
+                </div>
             </div>
 
             <hr class="mb-2" />
@@ -37,7 +59,7 @@ defineProps({
                         <div class="flex mb-2">
                             <div class="font-bold w-[120px]">状態</div>
                             <div>
-                                <select class="rounded py-1 min-w-[170px]" :disabled="type == 'View'">
+                                <select class="rounded py-1 min-w-[170px]" :disabled="props.type == 'View'">
                                     <option>未対応</option>
                                     <option>処理中</option>
                                     <option>処理済み</option>
@@ -48,7 +70,7 @@ defineProps({
                         <div class="flex mb-2">
                             <div class="font-bold w-[120px]">優先度</div>
                             <div>
-                                <select class="rounded py-1 min-w-[170px]" :disabled="type == 'View'">
+                                <select class="rounded py-1 min-w-[170px]" :disabled="props.type == 'View'">
                                     <option>低</option>
                                     <option>中</option>
                                     <option>高</option>
@@ -58,13 +80,13 @@ defineProps({
                         <div class="flex mb-2">
                             <div class="font-bold w-[120px]">開始日</div>
                             <div>
-                                <input class="rounded py-1 min-w-[170px]" type="date" :disabled="type == 'View'">
+                                <input class="rounded py-1 min-w-[170px]" type="date" :disabled="props.type == 'View'">
                             </div>
                         </div>
                         <div class="flex mb-2">
                             <div class="font-bold w-[120px]">カテゴリー</div>
                             <div>
-                                <select class="rounded py-1 min-w-[170px]" :disabled="type == 'View'">
+                                <select class="rounded py-1 min-w-[170px]" :disabled="props.type == 'View'">
                                     <option></option>
                                 </select>
                             </div>
@@ -76,7 +98,7 @@ defineProps({
                         <div class="flex mb-2">
                             <div class="font-bold w-[120px]">担当者</div>
                             <div>
-                                <select class="rounded py-1 min-w-[170px]" :disabled="type == 'View'">
+                                <select class="rounded py-1 min-w-[170px]" :disabled="props.type == 'View'">
                                     <option></option>
                                 </select>
                             </div>
@@ -84,7 +106,7 @@ defineProps({
                         <div class="flex mb-2">
                             <div class="font-bold w-[120px]">マイルストーン</div>
                             <div>
-                                <select class="rounded py-1 min-w-[170px]" :disabled="type == 'View'">
+                                <select class="rounded py-1 min-w-[170px]" :disabled="props.type == 'View'">
                                     <option></option>
                                 </select>
                             </div>
@@ -92,7 +114,7 @@ defineProps({
                         <div class="flex mb-2">
                             <div class="font-bold w-[120px]">期限日</div>
                             <div>
-                                <input class="rounded py-1 min-w-[170px]" type="date" :disabled="type == 'View'">
+                                <input class="rounded py-1 min-w-[170px]" type="date" :disabled="props.type == 'View'">
                             </div>
                         </div>
                         <div class="flex mb-2">
@@ -101,7 +123,7 @@ defineProps({
                                 <input class="rounded py-1 min-w-[170px]" type="text" value="設定なし" disabled>
                             </div>
                             <button class="bg-blue-500 hover:bg-blue-700 ms-2 text-white disabled:bg-slate-300 
-                                disabled:text-black px-3 rounded" :disabled="type == 'View'">
+                                disabled:text-black px-3 rounded" :disabled="props.type == 'View'">
                                 <small>親課題を設定する</small>
                             </button>
                         </div>
@@ -131,7 +153,7 @@ defineProps({
                     <template v-else-if="type == 'Edit'">
                         編集
                     </template>
-                    <template v-if="type == 'View'">
+                    <template v-else-if="type == 'View'">
                         編集画面へ
                     </template>
                     <template v-else>

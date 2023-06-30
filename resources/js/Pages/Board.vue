@@ -1,11 +1,15 @@
 <script setup>
 import AppHeader from '../Components/AppHeader.vue';
 import AppFooter from '../Components/AppFooter.vue';
+
+const props = defineProps({
+  auth_user: Object
+});
 </script>
 
 <template>
     <Head title="Backlog - Board" />
-    <AppHeader />
+    <AppHeader :auth_user="props.auth_user" />
 
     <main class="container flex-1 py-5 mx-auto max-w-[1000px]">
         

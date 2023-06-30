@@ -7,6 +7,6 @@ use Inertia\Inertia;
 class GanttChartController extends Controller
 {
     public function index() {
-        return Inertia::render('GanttChart');
+        return Inertia::render("GanttChart");
     }
 }

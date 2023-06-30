@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GanttChartController;
 use App\Http\Controllers\IssueController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,14 +19,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [DashboardController::class, 'index'])->name('index');
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-Route::get('/project/{project_id}', [ProjectController::class, 'index'])->name('project');
-Route::get('/issues', [IssueController::class, 'index'])->name('issues');
-Route::get('/create-issue', [IssueController::class, 'create'])->name('create-issue');
-Route::get('/edit-issue/{issue_id}', [IssueController::class, 'edit'])->name('edit-issue');
-Route::get('/view-issue/{issue_id}', [IssueController::class, 'view'])->name('view-issue');
-Route::get('/board', [BoardController::class, 'index'])->name('board');
-Route::get('/gantt-chart', [GanttChartController::class, 'index'])->name('gantt-chart');
+Route::middleware('auth')->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('index');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/project/{project_id}', [ProjectController::class, 'index'])->name('project');
+    Route::get('/create-project', [ProjectController::class, 'create'])->name('create-project');
+    Route::get('/issues', [IssueController::class, 'index'])->name('issues');
+    Route::get('/create-issue', [IssueController::class, 'create'])->name('create-issue');
+    Route::get('/edit-issue/{issue_id}', [IssueController::class, 'edit'])->name('edit-issue');
+    Route::get('/view-issue/{issue_id}', [IssueController::class, 'view'])->name('view-issue');
+    Route::get('/board', [BoardController::class, 'index'])->name('board');
+    Route::get('/gantt-chart', [GanttChartController::class, 'index'])->name('gantt-chart');
+    Route::get('/create-user', [UserController::class, 'create'])->name('create-user');
+    Route::post('/create-user', [UserController::class, 'store']);
+});
 
 require __DIR__.'/auth.php';

@@ -2,7 +2,7 @@
 import { ref, watch } from 'vue';
 import dayjs from 'dayjs';
 
-let props = defineProps({
+const props = defineProps({
   range: Number, // months
   start_date: String,
   issues: Array,
@@ -255,7 +255,9 @@ const computeWidth = (issue, type) => {
                             <td class="border border-solid border-black px-2 sticky left-0">
                                 <div class="flex justify-between min-w-[250px]">
                                     <div>
-                                        <Link href="/view-issue/1" class="font-bold text-blue-700 hover:underline">{{ issue.title }}</Link>
+                                        <Link :href="route('view-issue', ['issue_id', 1])" class="font-bold text-blue-700 hover:underline">
+                                            {{ issue.title }}
+                                        </Link>
                                     </div>
                                     <div>{{ issue.pic }}</div>
                                 </div>

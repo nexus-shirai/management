@@ -1,15 +1,19 @@
 <script setup>
 import AppHeader from '../Components/AppHeader.vue';
 import AppFooter from '../Components/AppFooter.vue';
+
+const props = defineProps({
+  common: Object
+});
 </script>
 
 <template>
     <Head title="Backlog - Project" />
-    <AppHeader />
+    <AppHeader :common="props.common" />
 
     <main class="container flex-1 py-5 mx-auto max-w-[1000px]">
         <div class="mb-3">
-            <Link href="/dashboard" as="button" type="button" class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4">戻る</Link>
+            <Link :href="route('dashboard')" as="button" type="button" class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4">戻る</Link>
         </div>
 
         <div class="flex bg-slate-100 mx-0 py-3 px-3">

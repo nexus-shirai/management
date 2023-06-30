@@ -5,6 +5,10 @@ import AppHeader from '../Components/AppHeader.vue';
 import AppFooter from '../Components/AppFooter.vue';
 import GanttChart from '../Components/GanttChart.vue';
 
+const props = defineProps({
+  common: Object
+});
+
 const range = ref(1);
 const start_date = ref(dayjs().format("YYYY-MM-DD"));
 
@@ -26,7 +30,7 @@ const oneWeekForward = () => {
 
 <template>
     <Head title="Backlog - Gantt Chart" />
-    <AppHeader />
+    <AppHeader :common="props.common" />
 
     <main class="container flex-1 py-5 mx-auto max-w-[1000px]">
         <div class="bg-slate-100 pt-2 pb-4 px-3 mt-2">
