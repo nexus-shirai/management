@@ -2,18 +2,33 @@
 
 namespace App\Repositories;
 
-use App\Models\User;
+use App\Models\Project;
 
-class UserRepository
+class ProjectRepository
 {
     public function getModelClass()
     {
-        return User::class;
+        return Project::class;
     }
 
     public function model()
     {
         return app($this->getModelClass());
+    }
+
+    public function findModelById($id)
+    {
+        return $this->model()->findOrFail($id);
+    }
+
+    public function updateModelById($params, $id)
+    {
+        return $this->findModelById($id)->fill($params)->save();
+    }
+
+    public function deleteModelById($id)
+    {
+        return $this->findModelById($id)->delete();
     }
 
     public function get($query)
@@ -36,9 +51,13 @@ class UserRepository
         return $query->orderBy($column, $order);
     }
 
-    public function addWhereUserTypeQuery($query, $userType)
+    public function addWhereProjectIdQuery($query, $projectId)
     {
-        return $query->where('user_type', $userType);
+        return $query->where('project_id', $projectId);
+    }
+
+    public function addWithProjectUsersQuery($query) {
+        return $query->with('project_users.user');
     }
 
     public function getBySearchConditions(array $appendQuerys)

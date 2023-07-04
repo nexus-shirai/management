@@ -16,6 +16,10 @@ class IssueController extends Controller
         ]);
     }
 
+    public function store() {
+        // 
+    }
+
     public function edit() {
         return Inertia::render("EditIssue", [
             "type" => "Edit"

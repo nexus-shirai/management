@@ -15,7 +15,7 @@ class CreateProjectsTable extends Migration
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->bigIncrements('project_id')->comment('プロジェクトID');
-            $table->string('project_cd', 4)->unique()->comment('プロジェクトコード');
+            $table->string('project_cd', 12)->unique()->comment('プロジェクトコード');
             $table->string('project_name')->comment('プロジェクト名');
             $table->string('project_desc')->comment('プロジェクト概要');
             $table->timestamps();

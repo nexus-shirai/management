@@ -29,6 +29,7 @@
         "vue-loader": "^16.8.3"
     },
     "dependencies": {
+        "@vueform/multiselect": "^2.6.2",
         "dayjs": "^1.11.8",
         "sweetalert2": "^11.7.12",
         "vue-scheduler-lite": "^1.0.7"

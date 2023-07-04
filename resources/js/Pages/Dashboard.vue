@@ -3,10 +3,9 @@ import AppHeader from '../Components/AppHeader.vue';
 import AppFooter from '../Components/AppFooter.vue';
 
 const props = defineProps({
-  common: Object
+  common: Object,
+  user_projects: Object,
 });
-
-
 </script>
 
 <template>
@@ -16,32 +15,38 @@ const props = defineProps({
     <main class="container flex-1 py-5 mx-auto max-w-[1000px]">
         <!-- projects table start -->
         <div class="font-bold mb-2">プロジェクト一覧</div>
-        <div class="bg-slate-100 py-2 px-3 hidden">
-            <div class="bg-white text-center py-3">
-                まだプロジェクトに参加していません。<br/>
-                <a href="#">プロジェクトの追加</a>を行ってください。
+        <template v-if="props.user_projects.length">
+            <div class="bg-slate-100 py-2 px-3">
+                <template v-for="user_project in props.user_projects">
+                    <Link :href="route('view-project', { 'project_id': user_project.project_id })">
+                        <div class="even:bg-slate-200 odd:bg-white hover:bg-slate-300 mb-2 px-3 py-2" role='button'>
+                            {{ user_project.project.project_name }} ({{ user_project.project.project_cd }})
+                        </div>
+                    </Link>
+                </template>
             </div>
-        </div>
-        <div class="bg-slate-100 py-2 px-3">
-            <div class="even:bg-slate-200 odd:bg-white hover:bg-slate-300 mb-2 px-3 py-2" onclick="goToProject(1)" role='button'>
-                プロジェクト01 (PROJECT-01)
+        </template>
+        <template v-else>
+            <div class="bg-slate-100 py-2 px-3 hidden">
+                <div class="bg-white text-center py-3">
+                    まだプロジェクトに参加していません。<br/>
+                    <a href="#">プロジェクトの追加</a>を行ってください。
+                </div>
             </div>
-            <div class="even:bg-slate-200 odd:bg-white hover:bg-slate-300 mb-2 px-3 py-2" onclick="goToProject(2)" role='button'>
-                プロジェクト02 (PROJECT-02)
-            </div>
-            <div class="even:bg-slate-200 odd:bg-white hover:bg-slate-300 px-3 py-2" onclick="goToProject(3)" role='button'>
-                プロジェクト03 (PROJECT-03)
-            </div>
-        </div>
+        </template>
         <!-- projects table end -->
 
         <!-- issues table start -->
         <div class="flex justify-between mx-0 mt-5">
             <div class="font-bold px-0">課題一覧</div>
             <div class="text-end px-0">
-                <button class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4"><small>ガントチャート</small></button>
-                <button class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4 ms-2"><small>課題一括操作</small></button>
-                <button class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4 ms-2"><small>カレンダー取込</small></button>
+                <Link :href="route('gantt-chart')">
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4">
+                        <small>ガントチャート</small>
+                    </button>
+                </Link>
+                <button class="bg-slate-300 rounded py-1 px-4 ms-2" disabled><small>課題一括操作</small></button>
+                <button class="bg-slate-300 rounded py-1 px-4 ms-2" disabled><small>カレンダー取込</small></button>
             </div>
         </div>
         

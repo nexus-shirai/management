@@ -3,13 +3,13 @@ import AppHeader from '../Components/AppHeader.vue';
 import AppFooter from '../Components/AppFooter.vue';
 
 const props = defineProps({
-  auth_user: Object
+  common: Object
 });
 </script>
 
 <template>
     <Head title="Backlog - Board" />
-    <AppHeader :auth_user="props.auth_user" />
+    <AppHeader :common="props.common" />
 
     <main class="container flex-1 py-5 mx-auto max-w-[1000px]">
         

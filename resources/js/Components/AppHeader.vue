@@ -29,7 +29,7 @@ if (props.common.flash_message) {
                         <span class="ms-2">ダッシュボード</span>
                     </Link>
                     <Link :href="route('issues')" class="font-bold text-blue-700 hover:underline ms-9">
-                        <i class="fa-solid fa-flag"></i>
+                        <i class="fa-sharp fa-solid fa-file"></i>
                         <span class="ms-2">課題</span>
                     </Link>
                     <Link :href="route('board')" class="font-bold text-blue-700 hover:underline ms-9">
@@ -41,15 +41,18 @@ if (props.common.flash_message) {
                         <span class="ms-2">ガントチャート</span>
                     </Link>
                     <div class="inline ms-9 relative">
-                        <span class="peer text-2xl text-blue-300 hover:text-blue-700">
+                        <span class="peer text-2xl text-blue-300 hover:text-blue-700" role="button">
                             <i class="fa-solid fa-circle-plus"></i>
                         </span>
-                        <div class="absolute left-0 hidden peer-hover:flex hover:flex w-[170px] flex-col bg-white drop-shadow-lg">
-                            <Link :href="route('create-project')" class="px-5 py-2 font-bold text-blue-700 hover:underline hover:bg-gray-200">
-                                <span class="ms-2">プロジェクト作成</span>
+                        <div class="absolute left-0 hidden peer-hover:flex hover:flex w-[180px] flex-col bg-white drop-shadow-lg">
+                            <Link :href="route('create-project')" class="px-5 py-2 font-bold text-blue-700 hover:underline hover:bg-slate-200">
+                                <i class="fa-sharp fa-solid fa-folder-plus"></i><span class="ms-2">プロジェクト作成</span>
                             </Link>
-                            <Link :href="route('create-user')" class="px-5 py-2 font-bold text-blue-700 hover:underline hover:bg-gray-200">
-                                <span class="ms-2">ユーザー作成</span>
+                            <Link :href="route('create-issue')" class="px-5 py-2 font-bold text-blue-700 hover:underline hover:bg-slate-200">
+                                <i class="fa-sharp fa-solid fa-file"></i><span class="ms-2">課題作成</span>
+                            </Link>
+                            <Link :href="route('create-user')" class="px-5 py-2 font-bold text-blue-700 hover:underline hover:bg-slate-200">
+                                <i class="fa-solid fa-user-plus"></i><span class="ms-2">ユーザー作成</span>
                             </Link>
                         </div>
                     </div>

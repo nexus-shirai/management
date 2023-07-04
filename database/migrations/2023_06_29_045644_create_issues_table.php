@@ -16,7 +16,7 @@ class CreateIssuesTable extends Migration
         Schema::create('issues', function (Blueprint $table) {
             $table->bigIncrements('issue_id')->comment('課題ID');
             $table->unsignedBigInteger('project_id')->comment('プロジェクトID');
-            $table->string('issue_cd', 10)->unique()->comment('課題コード');
+            $table->string('issue_cd', 20)->unique()->comment('課題コード(プロジェクトコード+ '-' + 連番)');
             $table->string('issue_title')->comment('課題タイトル');
             $table->longText('issue_desc')->comment('課題内容');
             $table->enum('issue_priority', ['high', 'medium', 'low'])->comment('優先度 high:高 medium:中 low:低');
