@@ -18,10 +18,9 @@ const props = defineProps({
         <template v-if="props.user_projects.length">
             <div class="bg-slate-100 py-2 px-3">
                 <template v-for="user_project in props.user_projects">
-                    <Link :href="route('view-project', { 'project_id': user_project.project_id })">
-                        <div class="even:bg-slate-200 odd:bg-white hover:bg-slate-300 mb-2 px-3 py-2" role='button'>
-                            {{ user_project.project.project_name }} ({{ user_project.project.project_cd }})
-                        </div>
+                    <Link :href="route('view-project', { 'project_id': user_project.project_id })"
+                        class="even:bg-slate-200 odd:bg-white hover:bg-slate-300 mb-2 px-3 py-2 block">
+                        {{ user_project.project.project_name }} ({{ user_project.project.project_cd }})
                     </Link>
                 </template>
             </div>

@@ -64,9 +64,30 @@ class ProjectService
         return $this->repository->updateModelById($params, $id);
     }
 
-    public function deleteByProjectId($projectId)
+    private function deleteByProjectId($projectId)
     {
         $this->projectUserService->deleteByProjectId($projectId);
+    }
+
+    public function getProjects()
+    {
+        $appendQuerys = [];
+
+        array_push($appendQuerys, function ($query) {
+            $column = "project_id";
+            $order = "DESC";
+            return $this->repository->orderByQuery($query, $column, $order);
+        });
+
+        array_push($appendQuerys, function ($query) {
+            return $this->repository->get($query);
+        });
+
+        try {
+            return $this->repository->getBySearchConditions($appendQuerys);
+        } catch (Exception $e) {
+            return $e;
+        }
     }
 
     public function getProjectData($data = [])

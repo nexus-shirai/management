@@ -29,14 +29,16 @@ class KindRequest extends FormRequest
                 'required',
                 'max:255',
                 Rule::unique('kinds')->ignore($this->kind_id, 'kind_id')
-            ]
+            ],
+            'kind_name' => ['required', 'max:255'],
+            'hex_color' => ['required', 'max:7'],
         ];
 
         if ($this->isMethod('put')) {
-            $newRules = [
+            $editRules = [
                 'kind_id' => ['required', 'integer'],
             ];
-            $rules = array_merge($newRules,  $rules);
+            $rules = array_merge($editRules,  $rules);
         }
 
         return $rules;

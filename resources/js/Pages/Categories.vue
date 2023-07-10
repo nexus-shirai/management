@@ -39,8 +39,9 @@ const grid_columns = [
 ];
 
 const goToEdit = (category_id) => {
-    location.href = route('edit-category', { 'category_id': category_id });
+    form.get(route('edit-category', { 'category_id': category_id }));
 };
+
 const onClickDelete = (category_id) => {
     Swal.fire({
         title: '削除しますか?',

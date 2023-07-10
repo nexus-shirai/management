@@ -12,6 +12,8 @@ const props = defineProps({
 const form = useForm({
     kind_id: props.kind ? props.kind.kind_id : null,
     kind_name: props.kind ? props.kind.kind_name : '',
+    kind_desc: props.kind ? props.kind.kind_desc : '',
+    hex_color: props.kind ? props.kind.hex_color : '#f8aaaa',
 });
 
 let title = "";
@@ -32,6 +34,9 @@ const submit = () => {
         // do nothing
     }
 };
+
+const previewText = () => form.kind_name != '' ? form.kind_name : '種別名';
+const previewTootltip = () => form.kind_desc != '' ? form.kind_desc : '種別内容';
 </script>
 
 <template>
@@ -52,6 +57,38 @@ const submit = () => {
                     <div>
                         <small class="text-red-500">{{ form.errors.kind_name }}</small>
                     </div>
+                </div>
+            </div>
+
+            <div class="mb-2 flex">
+                <div class="font-bold w-[170px]">
+                    種別内容<sup class="text-red-500 ms-2"><i class="fa-solid fa-asterisk"></i></sup>
+                </div>
+                <div>
+                    <input type="text" placeholder="種別内容" class="min-w-[300px] rounded py-1"
+                        v-model="form.kind_desc" :class="form.errors.kind_desc ? 'border-red-500' : ''">
+                    <div>
+                        <small class="text-red-500">{{ form.errors.kind_desc }}</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-2 flex">
+                <div class="font-bold w-[170px]">
+                    カラーコード<sup class="text-red-500 ms-2"><i class="fa-solid fa-asterisk"></i></sup>
+                </div>
+                <div id="color-picker" class="relative">
+                    <input type="color" class="border min-w-[300px] h-[32px] rounded" v-model="form.hex_color">
+                </div>
+            </div>
+
+            <div class="mb-2 flex">
+                <div class="font-bold w-[170px]">プレビュー</div>
+                <div>
+                    <span class="rounded-full px-4 whitespace-nowrap text-white" :style="{ backgroundColor: form.hex_color }"
+                        :title="previewTootltip()" role="button">
+                        <small>{{ previewText() }}</small>
+                    </span>
                 </div>
             </div>
 
@@ -77,4 +114,7 @@ const submit = () => {
 </template>
 
 <style scoped>
+    #color-picker input[type=color] {
+        border-color: #6b7280;
+    }
 </style>

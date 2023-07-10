@@ -2,13 +2,13 @@
 
 namespace App\Repositories;
 
-use App\Models\Project;
+use App\Models\Issue;
 
-class ProjectRepository
+class IssueRepository
 {
     public function getModelClass()
     {
-        return Project::class;
+        return Issue::class;
     }
 
     public function model()
@@ -41,6 +41,11 @@ class ProjectRepository
         return $query->first();
     }
 
+    public function count($query)
+    {
+        return $query->count();
+    }
+
     public function createModel($params)
     {
         return $this->model()->create($params);
@@ -51,13 +56,39 @@ class ProjectRepository
         return $query->orderBy($column, $order);
     }
 
+    public function addWhereIssueIdQuery($query, $issueId)
+    {
+        return $query->where('issue_id', $issueId);
+    }
+
+    public function addWhereStatusIdQuery($query, $statusId)
+    {
+        return $query->where('status_id', $statusId);
+    }
+
     public function addWhereProjectIdQuery($query, $projectId)
     {
         return $query->where('project_id', $projectId);
     }
 
-    public function addWithProjectUsersQuery($query) {
-        return $query->with('project_users');
+    public function addWhereNotIssueIdQuery($query, $issueId)
+    {
+        return $query->where('issue_id', '<>', $issueId);
+    }
+
+    public function addWithKindQuery($query)
+    {
+        return $query->with('kind');
+    }
+
+    public function addWithIssueCategoriesQuery($query)
+    {
+        return $query->with('issue_categories');
+    }
+
+    public function addWithStatusQuery($query)
+    {
+        return $query->with('status');
     }
 
     public function getBySearchConditions(array $appendQuerys)

@@ -19,7 +19,7 @@ class KindService
 
         array_push($appendQuerys, function ($query) {
             $column = "kind_id";
-            $order = "DESC";
+            $order = "ASC";
             return $this->repository->orderByQuery($query, $column, $order);
         });
 

@@ -24,6 +24,8 @@ class Kind extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'kind_name'
+        'kind_name',
+        'kind_desc',
+        'hex_color',
     ];
 }

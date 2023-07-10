@@ -37,10 +37,10 @@ class ProjectRequest extends FormRequest
         ];
 
         if ($this->isMethod('put')) {
-            $newRules = [
+            $editRules = [
                 'project_id' => ['required', 'integer'],
             ];
-            $rules = array_merge($newRules,  $rules);
+            $rules = array_merge($editRules,  $rules);
         }
 
         return $rules;

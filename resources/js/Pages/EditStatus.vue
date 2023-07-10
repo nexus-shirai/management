@@ -12,6 +12,7 @@ const props = defineProps({
 const form = useForm({
     status_id: props.status ? props.status.status_id : null,
     status_name: props.status ? props.status.status_name : '',
+    hex_color: props.status ? props.status.hex_color : '#f8aaaa',
 });
 
 let title = "";
@@ -32,6 +33,8 @@ const submit = () => {
         // do nothing
     }
 };
+
+const previewText = () => form.status_name != '' ? form.status_name : '状態名';
 </script>
 
 <template>
@@ -52,6 +55,24 @@ const submit = () => {
                     <div>
                         <small class="text-red-500">{{ form.errors.status_name }}</small>
                     </div>
+                </div>
+            </div>
+
+            <div class="mb-2 flex">
+                <div class="font-bold w-[170px]">
+                    カラーコード<sup class="text-red-500 ms-2"><i class="fa-solid fa-asterisk"></i></sup>
+                </div>
+                <div id="color-picker" class="relative">
+                    <input type="color" class="border min-w-[300px] h-[32px] rounded" v-model="form.hex_color">
+                </div>
+            </div>
+
+            <div class="mb-2 flex">
+                <div class="font-bold w-[170px]">プレビュー</div>
+                <div>
+                    <span class="rounded-full px-4 whitespace-nowrap text-white" :style="{ backgroundColor: form.hex_color }">
+                        <small>{{ previewText() }}</small>
+                    </span>
                 </div>
             </div>
 

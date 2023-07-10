@@ -24,6 +24,7 @@ class Status extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'status_name'
+        'status_name',
+        'hex_color',
     ];
 }
