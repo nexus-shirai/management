@@ -15,8 +15,8 @@ class CreateIssueCategoriesTable extends Migration
     {
         Schema::create('issue_categories', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('category_id')->comment('カテゴリーID');
             $table->unsignedBigInteger('issue_id')->comment('課題ID');
+            $table->unsignedBigInteger('category_id')->comment('カテゴリーID');
         });
     }
 

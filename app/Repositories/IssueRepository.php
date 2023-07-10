@@ -86,6 +86,12 @@ class IssueRepository
         return $query->with('issue_categories');
     }
 
+    public function addWhereAssigneeOrCreateUserId($query, $assigneeOrCreateUserId)
+    {
+        return $query->where('assignee_id', $assigneeOrCreateUserId)
+            ->orWhere('create_user_id', $assigneeOrCreateUserId);
+    }
+
     public function addWithStatusQuery($query)
     {
         return $query->with('status');

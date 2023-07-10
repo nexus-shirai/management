@@ -89,7 +89,7 @@ const change_start_date = ref(false);
 const change_end_date = ref(false);
 const change_position = ref(false);
 
-const onDragStart = (event, issue_id, change_type) => {
+const onDragStart = (_, issue_id, change_type) => {
     active_issue_id.value = issue_id;
     change_start_date.value = change_type == "CHANGE_START_DATE";
     change_end_date.value = change_type == "CHANGE_END_DATE";
@@ -113,13 +113,13 @@ const onDragStart = (event, issue_id, change_type) => {
     }
 };
 
-const onDrag = (event) => {};
+const onDrag = (_) => {};
 
-const onDragOver = (event, new_date) => {
+const onDragOver = (_, new_date) => {
     updateShadowTimeline(new_date);
 };
 
-const onDrop = (event, new_date) => {
+const onDrop = (_, new_date) => {
     updateTimeline(new_date);
 
     active_issue_id.value = null;

@@ -1,11 +1,164 @@
 <script setup>
+import { ref } from 'vue';
 import AppHeader from '../Components/AppHeader.vue';
 import AppFooter from '../Components/AppFooter.vue';
+import GridTable from '../Components/GridTable.vue';
+import { h, html } from "gridjs";
+import dayjs from 'dayjs';
+import { useForm } from '@inertiajs/inertia-vue3';
 
 const props = defineProps({
   common: Object,
   user_projects: Object,
+  user_issues: Object,
 });
+
+const issueTableRef = ref();
+const grid_data = ref([]);
+
+const grid_columns = [
+    {
+        name: '種別',
+        id: 'kind',
+        formatter: (_, row) => html(
+            `<span class="rounded-full px-4 whitespace-nowrap text-white"
+                title="${row.cells[0].data.kind_desc}"
+                role="button"
+                style="background-color: ${row.cells[0].data.hex_color};">
+                <small>
+                    ${row.cells[0].data.kind_name}
+                </small>
+            </span>`),
+    },
+    {
+        name: 'キー',
+        id: 'issue_cd',
+        sort: true
+    },
+    {
+        name: '件名',
+        id: 'issue_title',
+        sort: true
+    },
+    {
+        name: '優先度',
+        id: 'issue_priority',
+        formatter: (_, row) => {
+            switch(row.cells[3].data) {
+                case 'low':
+                    return '低';
+                case 'medium':
+                    return '中';
+                case 'high':
+                    return '高';
+                default:
+                    return '';
+            }
+        }
+    },
+    {
+        name: '状態',
+        id: 'status',
+        sort: true,
+        formatter: (_, row) => html(
+            `<span class="rounded-full px-4 whitespace-nowrap text-white"
+                role="button"
+                style="background-color: ${row.cells[4].data.hex_color};">
+                <small>
+                    ${row.cells[4].data.status_name}
+                </small>
+            </span>`),
+    },
+    {
+        name: '終了日',
+        id: 'end_date',
+        sort: true,
+        formatter: (_, row) => dayjs(row.cells[5].data).format("MM/DD")
+    },
+    {
+        name: 'アクション',
+        id: 'issue_id',
+        formatter: (_, row) => {
+            let buttons = [];
+            buttons.push(h('button', {
+                className: 'bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4',
+                onClick: () => goToDetail(row.cells[7].data, row.cells[6].data)
+            }, '詳細'));
+            return buttons;
+        }
+    },
+    {
+        name: '',
+        id: 'project_id',
+        hidden: true
+    }
+];
+
+let target_01 = 0;
+let target_02 = 0;
+let dealine_01 = 0;
+let dealine_02 = 0;
+let dealine_03 = 0;
+let dealine_04 = 0;
+
+props.user_issues.forEach(issue => {
+    if (issue.assignee_id == props.common.auth_user.user_id) {
+        target_01++;
+    }
+    if (issue.create_user_id == props.common.auth_user.user_id) {
+        target_02++;
+    }
+
+    dealine_01++;
+    let today = dayjs().startOf("day");
+    let end_date = dayjs(issue.end_date).startOf("day");
+    if ((end_date.isSame(today, "day") || end_date.isAfter(today, "day")) && end_date.diff(today, "day") <= 3) {
+        dealine_02++;
+    }
+    if (end_date.isSame(today, "day")) {
+        dealine_03++;
+    }
+    if (end_date.isBefore(today, "day")) {
+        dealine_04++;
+    }
+});
+
+const target = ref(1);
+const deadline = ref(1);
+const form = useForm({});
+
+const goToDetail = (project_id, issue_id) => {
+    form.get(route('view-issue', { 'project_id': project_id, 'issue_id': issue_id }));
+};
+
+const filterData = () => {
+    grid_data.value = [];
+    props.user_issues.forEach(issue => {
+        if (target.value == 1 && issue.assignee_id != props.common.auth_user.user_id) return;
+        if (target.value == 2 && issue.create_user_id != props.common.auth_user.user_id) return;
+        let today = dayjs().startOf("day");
+        let end_date = dayjs(issue.end_date).startOf("day");
+        if (deadline.value == 2 && !((end_date.isSame(today, "day") || end_date.isAfter(today, "day")) && end_date.diff(today, "day") <= 3)) return;
+        if (deadline.value == 3 && !(end_date.isSame(today, "day"))) return;
+        if (deadline.value == 4 && !(end_date.isBefore(today, "day"))) return;
+
+        grid_data.value.push(grid_columns.map(column => issue[column.id]));
+    });
+};
+
+filterData();
+
+const onChangeTarget = (val) => {
+    if (target.value == val) return;
+    target.value = val;
+    filterData();
+}
+
+const onChangeDeadline = (val) => {
+    if (deadline.value == val) return;
+    deadline.value = val;
+    filterData();
+}
 </script>
 
 <template>
@@ -16,10 +169,10 @@ const props = defineProps({
         <!-- projects table start -->
         <div class="font-bold mb-2">プロジェクト一覧</div>
         <template v-if="props.user_projects.length">
-            <div class="bg-slate-100 py-2 px-3">
+            <div class="bg-slate-100 py-3 px-3">
                 <template v-for="user_project in props.user_projects">
                     <Link :href="route('view-project', { 'project_id': user_project.project_id })"
-                        class="even:bg-slate-200 odd:bg-white hover:bg-slate-300 mb-2 px-3 py-2 block">
+                        class="even:bg-slate-200 odd:bg-white hover:bg-slate-300 mb-2 px-3 py-3 block">
                         {{ user_project.project.project_name }} ({{ user_project.project.project_cd }})
                     </Link>
                 </template>
@@ -38,78 +191,56 @@ const props = defineProps({
         <!-- projects table end -->
 
         <!-- issues table start -->
-        <div class="flex justify-between mx-0 mt-5">
-            <div class="font-bold px-0">課題一覧</div>
-            <div class="text-end px-0">
-                <Link :href="route('gantt-chart')">
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4">
-                        <small>ガントチャート</small>
-                    </button>
-                </Link>
-                <button class="bg-slate-300 rounded py-1 px-4 ms-2" disabled><small>課題一括操作</small></button>
-                <button class="bg-slate-300 rounded py-1 px-4 ms-2" disabled><small>カレンダー取込</small></button>
-            </div>
-        </div>
+        <div class="mt-5 font-bold">課題一覧</div>
         
         <div class="bg-slate-100 py-2 px-3 my-2">
             <div class="font-bold mb-1">絞り込み条件</div>
-            <div class="flex py-1">
-                <div class="font-bold inline-block min-w-[80px]"><small>対象：</small></div>
-                <div class="inline-block">
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white rounded-full py-1 px-4 ms-2"><small>担当 (1)</small></button>
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white rounded-full py-1 px-4 ms-2"><small>登録 (1)</small></button>
+            <div class="bg-slate-200 py-2 px-3 my-2">
+                <div class="flex py-1">
+                    <div class="font-bold inline-block min-w-[80px]"><small>対象：</small></div>
+                    <div class="inline-block">
+                        <button :class="target == 1 ? 'bg-blue-500 text-white' : ''" @click="onChangeTarget(1)"
+                            class="hover:bg-blue-700 hover:text-white rounded-full py-1 px-4 ms-2">
+                            <small>担当 ({{ target_01 }})</small>
+                        </button>
+                        <button :class="target == 2 ? 'bg-blue-500 text-white' : ''" @click="onChangeTarget(2)"
+                            class="hover:bg-blue-700 hover:text-white rounded-full py-1 px-4 ms-2">
+                            <small>登録 ({{ target_02 }})</small>
+                        </button>
+                    </div>
                 </div>
-            </div>
-            <div class="flex py-1">
-                <div class="font-bold inline-block min-w-[80px]"><small>期限日：</small></div>
-                <div class="inline-block">
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white rounded-full py-1 px-4 ms-2"><small>すべて (1)</small></button>
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white rounded-full py-1 px-4 ms-2"><small>4日以内 (1)</small></button>
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white rounded-full py-1 px-4 ms-2"><small>今日まで (1)</small></button>
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white rounded-full py-1 px-4 ms-2"><small>期限切れ (1)</small></button>
+                <div class="flex py-1">
+                    <div class="font-bold inline-block min-w-[80px]"><small>期限日：</small></div>
+                    <div class="inline-block">
+                        <button :class="deadline == 1 ? 'bg-blue-500 text-white' : ''" @click="onChangeDeadline(1)"
+                            class="hover:bg-blue-700 hover:text-white rounded-full py-1 px-4 ms-2">
+                            <small>すべて ({{ dealine_01 }})</small>
+                        </button>
+                        <button :class="deadline == 2 ? 'bg-blue-500 text-white' : ''" @click="onChangeDeadline(2)"
+                            class="hover:bg-blue-700 hover:text-white rounded-full py-1 px-4 ms-2">
+                            <small>4日以内 ({{ dealine_02 }})</small>
+                        </button>
+                        <button :class="deadline == 3 ? 'bg-blue-500 text-white' : ''" @click="onChangeDeadline(3)"
+                            class="hover:bg-blue-700 hover:text-white rounded-full py-1 px-4 ms-2">
+                            <small>今日まで ({{ dealine_03 }})</small>
+                        </button>
+                        <button :class="deadline == 4 ? 'bg-blue-500 text-white' : ''" @click="onChangeDeadline(4)"
+                            class="hover:bg-blue-700 hover:text-white rounded-full py-1 px-4 ms-2">
+                            <small>期限切れ ({{ dealine_04 }})</small>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="bg-slate-100 py-3 px-3">
-            <table class="w-full">
-                <thead>
-                    <tr>
-                        <th class="text-center py-2">種別</th>
-                        <th class="text-center py-2">キー</th>
-                        <th class="text-center py-2">件名</th>
-                        <th class="text-center py-2">優先度</th>
-                        <th class="text-center py-2">状態</th>
-                        <th class="text-center py-2">期限日</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="even:bg-slate-200 odd:bg-white hover:bg-slate-300" role="button">
-                        <td class="py-2 text-center"><span class="bg-green-300 rounded-full px-4"><small>タスク</small></span></td>
-                        <td class="py-2">PROJECT-01-01</td>
-                        <td class="py-2">課題〇〇</td>
-                        <td class="py-2 text-center">高</td>
-                        <td class="py-2 text-center"><span class="bg-rose-300 rounded-full px-4"><small>未対応</small></span></td>
-                        <td class="py-2 text-center">2/28</td>
-                    </tr>
-                    <tr class="even:bg-slate-200 odd:bg-white hover:bg-slate-300" role="button">
-                        <td class="py-2 text-center"><span class="bg-rose-300 rounded-full px-4"><small>バグ</small></span></td>
-                        <td class="py-2">PROJECT-01-02</td>
-                        <td class="py-2">課題〇〇</td>
-                        <td class="py-2 text-center">中</td>
-                        <td class="py-2 text-center"><span class="bg-yellow-300 rounded-full px-4"><small>処理中</small></span></td>
-                        <td class="py-2 text-center">2/28</td>
-                    </tr>
-                    <tr class="even:bg-slate-200 odd:bg-white hover:bg-slate-300" role="button">
-                        <td class="py-2 text-center"><span class="bg-green-300 rounded-full px-4"><small>タスク</small></span></td>
-                        <td class="py-2">PROJECT-01-03</td>
-                        <td class="py-2">課題〇〇</td>
-                        <td class="py-2 text-center">低</td>
-                        <td class="py-2 text-center"><span class="bg-green-300 rounded-full px-4"><small>完了</small></span></td>
-                        <td class="py-2 text-center">2/28</td>
-                    </tr>
-                </tbody>
-            </table>
+            <GridTable
+                id="issue_grid_table"
+                ref="issueTableRef"
+                :data="grid_data"
+                :grid_columns="grid_columns"
+                :auto_width="true"
+                :pagination="true" />
         </div>
         <!-- issues table end -->
     </main>
@@ -117,5 +248,17 @@ const props = defineProps({
     <AppFooter />
 </template>
 
-<style scoped>
+<style>
+#issue_grid_table th:nth-child(1),
+#issue_grid_table th:nth-child(4),
+#issue_grid_table th:nth-child(5),
+#issue_grid_table th:nth-child(6),
+#issue_grid_table th:nth-child(7),
+#issue_grid_table td:nth-child(1),
+#issue_grid_table td:nth-child(4),
+#issue_grid_table td:nth-child(5),
+#issue_grid_table td:nth-child(6),
+#issue_grid_table td:nth-child(7) {
+    text-align: center;
+}
 </style>
