@@ -20,12 +20,6 @@ class UserService
         $appendQuerys = [];
 
         array_push($appendQuerys, function ($query) {
-            $column = "user_id";
-            $order = "ASC";
-            return $this->repository->orderByQuery($query, $column, $order);
-        });
-
-        array_push($appendQuerys, function ($query) {
             $userType = User::USER_TYPE_GENERAL;
             return $this->repository->addWhereUserTypeQuery($query, $userType);
         });

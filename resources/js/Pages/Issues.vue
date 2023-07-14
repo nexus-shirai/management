@@ -148,7 +148,7 @@ const filterData = () => {
                 </Link>
             </div>
             <div>
-                <Link :href="route('gantt-chart')">
+                <Link :href="route('gantt-chart', { 'project_id': props.project.project_id })">
                     <button class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4">ガントチャート</button>
                 </Link>
                 <button class="bg-slate-300 rounded py-1 px-4 ms-2" disabled><small>課題一括操作</small></button>

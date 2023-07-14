@@ -89,4 +89,36 @@ class Issue extends Model
     {
         return $this->hasMany(IssueCategory::class, 'issue_id', 'issue_id');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function assignee()
+    {
+        return $this->belongsTo(User::class, 'assignee_id', 'user_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function child_issues()
+    {
+        return $this->hasMany(Issue::class, 'parent_issue_id', 'issue_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function parent_issue()
+    {
+        return $this->belongsTo(Issue::class, 'parent_issue_id', 'issue_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function milestone()
+    {
+        return $this->belongsTo(Milestone::class, 'milestone_id', 'milestone_id');
+    }
 }

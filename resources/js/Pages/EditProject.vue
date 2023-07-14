@@ -87,8 +87,11 @@ const onClickDelete = () => {
 
         <template v-if="props.type == 'View'">
             <div class="text-right">
+                <Link :href="route('gantt-chart', { 'project_id': props.project.project_id })">
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4">ガントチャート</button>
+                </Link>
                 <Link :href="route('issues', { 'project_id': props.project.project_id })">
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4 mb-2">課題一覧</button>
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4 mb-2 ms-2">課題一覧</button>
                 </Link>
             </div>
 

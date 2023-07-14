@@ -47,7 +47,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/project/{project_id}/delete-issue/{issue_id}', [IssueController::class, 'delete'])->name('delete-issue');
 
     Route::get('/board', [BoardController::class, 'index'])->name('board');
-    Route::get('/gantt-chart', [GanttChartController::class, 'index'])->name('gantt-chart');
+    Route::get('/project/{project_id}/gantt-chart', [GanttChartController::class, 'index'])->name('gantt-chart');
+    Route::put('/project/{project_id}/update-gantt-chart', [GanttChartController::class, 'update'])->name('update-gantt-chart');
+    Route::get('/project/{project_id}/refresh-grantt-chart', [GanttChartController::class, 'refresh'])->name('refresh-grantt-chart');
+    Route::get('/project/{project_id}/fetch-new-data', [GanttChartController::class, 'fetch'])->name('fetch-new-data');
     
     Route::get('/create-user', [UserController::class, 'create'])->name('create-user');
     Route::post('/create-user', [UserController::class, 'store']);
