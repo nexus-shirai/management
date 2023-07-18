@@ -154,6 +154,9 @@ const filterData = () => {
                 <Link :href="route('board', { 'project_id': props.project.project_id })">
                     <button class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4 ms-2">ボード</button>
                 </Link>
+                <Link :href="route('create-issue', { 'project_id': props.project.project_id })">
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4 ms-2">課題作成</button>
+                </Link>
                 <!-- <button class="bg-slate-300 rounded py-1 px-4 ms-2" disabled><small>課題一括操作</small></button>
                 <button class="bg-slate-300 rounded py-1 px-4 ms-2" disabled><small>カレンダー取込</small></button> -->
             </div>
@@ -259,10 +262,6 @@ const filterData = () => {
 
         <div class="bg-slate-100 py-3 px-3">
             <div class="font-bold mb-2">課題一覧</div>
-            
-            <Link :href="route('create-issue', { 'project_id': props.project.project_id })">
-                <button class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4 ms-1">課題作成</button>
-            </Link>
 
             <GridTable
                 id="issue_grid_table"

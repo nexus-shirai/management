@@ -54,9 +54,9 @@ class ProjectService
         $this->projectUserService->deleteByProjectId($projectId);
     }
     
-    public function getGeneralUsers()
+    public function getUsers($data)
     {
-        return $this->userService->getGeneralUsers();
+        return $this->userService->getUsers($data);
     }
 
     public function updateModelById(array $params, $id)

@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\User;
 use App\Repositories\UserRepository;
 use Exception;
 use Illuminate\Support\Facades\Hash;
@@ -15,15 +14,36 @@ class UserService
         $this->repository = $repository;
     }
 
-    public function getGeneralUsers()
+    public function getUsers($data = [])
+    {
+        $appendQuerys = [];
+
+        if (isset($data["user_type"])) {
+            $userType = $data["user_type"];
+            array_push($appendQuerys, function ($query) use ($userType) {
+                return $this->repository->addWhereUserTypeQuery($query, $userType);
+            });
+        }
+
+        array_push($appendQuerys, function ($query) {
+            return $this->repository->get($query);
+        });
+
+        try {
+            return $this->repository->getBySearchConditions($appendQuerys);
+        } catch (Exception $e) {
+            return $e;
+        }
+    }
+
+    public function getCategories()
     {
         $appendQuerys = [];
 
         array_push($appendQuerys, function ($query) {
-            $userType = User::USER_TYPE_GENERAL;
-            return $this->repository->addWhereUserTypeQuery($query, $userType);
+            return $this->repository->orderByQuery($query, "category_id", "ASC");
         });
-
+        
         array_push($appendQuerys, function ($query) {
             return $this->repository->get($query);
         });

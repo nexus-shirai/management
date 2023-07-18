@@ -202,6 +202,11 @@ const addFilter = (issue) => {
     <AppHeader :common="props.common" />
 
     <main class="container flex-1 py-5 mx-auto max-w-[1000px]">
+        <div>
+            <Link :href="route('view-project', { 'project_id': props.project.project_id })">
+                <button class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4">戻る</button>
+            </Link>
+        </div>
         
         <div class="bg-slate-100 pt-2 pb-5 px-3 my-2">
             <!-- breadcrumbs -->

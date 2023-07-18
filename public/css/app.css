@@ -759,10 +759,6 @@ select {
 .mr-2 {
   margin-right: 0.5rem;
 }
-.ms-1 {
-  -webkit-margin-start: 0.25rem;
-          margin-inline-start: 0.25rem;
-}
 .ms-12 {
   -webkit-margin-start: 3rem;
           margin-inline-start: 3rem;
@@ -1140,6 +1136,9 @@ select {
 .pb-5 {
   padding-bottom: 1.25rem;
 }
+.pb-7 {
+  padding-bottom: 1.75rem;
+}
 .pt-2 {
   padding-top: 0.5rem;
 }
@@ -1359,11 +1358,6 @@ select {
 .hover\:bg-slate-300:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(203 213 225 / var(--tw-bg-opacity));
-}
-
-.hover\:bg-slate-400:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(148 163 184 / var(--tw-bg-opacity));
 }
 
 .hover\:text-blue-700:hover {

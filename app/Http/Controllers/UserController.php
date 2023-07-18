@@ -16,6 +16,16 @@ class UserController extends Controller
         $this->service = $service;
     }
 
+    public function index() {
+        return Inertia::render("Users");
+    }
+
+    public function search() {
+        $users = $this->service->getUsers();
+
+        return response()->json($users);
+    }
+
     public function create() {
         return Inertia::render("EditUser", [
             "type" => "Create"

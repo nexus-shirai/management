@@ -56,8 +56,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/project/{project_id}/refresh-grantt-chart', [GanttChartController::class, 'refresh'])->name('refresh-grantt-chart');
     Route::get('/project/{project_id}/fetch-chart-data', [GanttChartController::class, 'fetch'])->name('fetch-chart-data');
     
+    Route::get('/users', [UserController::class, 'index'])->name('users');
+    Route::get('/search-users', [UserController::class, 'search'])->name('search-users');
     Route::get('/create-user', [UserController::class, 'create'])->name('create-user');
     Route::post('/create-user', [UserController::class, 'store']);
+    Route::get('/edit-user/{user_id}', [UserController::class, 'edit'])->name('edit-user');
+    Route::put('/edit-user/{user_id}', [UserController::class, 'update']);
+    Route::delete('/delete-user/{user_id}', [UserController::class, 'delete'])->name('delete-user');
 
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories');
     Route::get('/search-categories', [CategoryController::class, 'search'])->name('search-categories');

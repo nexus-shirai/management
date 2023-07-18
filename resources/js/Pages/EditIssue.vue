@@ -108,8 +108,29 @@ const onClickDelete = () => {
     <AppHeader :common="props.common" />
 
     <main class="container flex-1 py-5 mx-auto max-w-[1000px]">
+        <Link :href="route('issues', { project_id: props.project.project_id })">
+            <button class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4">戻る</button>
+        </Link>
+
         <form class="bg-slate-100 py-2 px-3 mt-2 mb-2" @submit.prevent="submit">
-            <div class="font-bold mb-5">課題{{ title }}</div>
+            <!-- breadcrumbs -->
+            <div class="font-bold mt-2 mb-4">
+                <Link :href="route('projects')" class="font-bold text-blue-700 hover:underline">
+                    プロジェクト一覧
+                </Link>
+                <span class="ms-4"><i class="fa-solid fa-angle-right"></i></span>
+                <Link :href="route('view-project', { project_id: props.project.project_id })"
+                    class="font-bold text-blue-700 hover:underline ms-4">
+                    {{ props.project.project_name }} ({{ props.project.project_cd  }})
+                </Link>
+                <span class="ms-4"><i class="fa-solid fa-angle-right"></i></span>
+                <Link :href="route('issues', { project_id: props.project.project_id })"
+                    class="font-bold text-blue-700 hover:underline ms-4">
+                    課題一覧
+                </Link>
+                <span class="ms-4"><i class="fa-solid fa-angle-right"></i></span>
+                <span class="ms-4">課題{{ title }}</span>
+            </div>
 
             <div class="mb-4 flex">
                 <div class="font-bold w-[135px]">プロジェクト</div>
@@ -414,10 +435,6 @@ const onClickDelete = () => {
             </div>
 
             <div class="mt-5 mb-3 text-center">
-                <Link :href="route('issues', { 'project_id': props.project.project_id })">
-                    <button type="button" class="bg-slate-300 hover:bg-slate-400 rounded py-1 px-4">戻る</button>
-                </Link>
-                
                 <template v-if="type == 'View'">
                     <button class="bg-red-500 hover:bg-red-700 text-white rounded py-1 px-4 ms-2"
                         type="button" @click="onClickDelete">
