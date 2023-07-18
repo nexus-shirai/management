@@ -33,6 +33,7 @@
         "dayjs": "^1.11.8",
         "gridjs": "^6.0.6",
         "sweetalert2": "^11.7.12",
-        "vue-scheduler-lite": "^1.0.7"
+        "vue-scheduler-lite": "^1.0.7",
+        "vuedraggable": "^4.1.0"
     }
 }

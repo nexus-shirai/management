@@ -26,7 +26,7 @@ class KindSeeder extends Seeder
                 "hex_color" => "#B7CA22"
             ],
             [
-                "kind_name" => "要要望",
+                "kind_name" => "要望",
                 "kind_desc" => "要望・質問等。",
                 "hex_color" => "#E0A704"
             ],

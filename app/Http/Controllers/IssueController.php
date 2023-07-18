@@ -126,10 +126,6 @@ class IssueController extends Controller
             ->with("message", "課題を更新しました。");
     }
 
-    public function updatePeriod($data) {
-        $this->service->updatePeriod($data);
-    }
-
     public function view(Request $request) {
         $data["project_id"] = $request->project_id;
         $project = $this->service->getProjectData($data);

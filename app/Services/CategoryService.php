@@ -8,14 +8,23 @@ use Exception;
 class CategoryService
 {
     private $repository;
+    private $issueCategoryService;
 
-    public function __construct(CategoryRepository $repository) {
+    public function __construct(
+        CategoryRepository $repository,
+        IssueCategoryService $issueCategoryService
+    ) {
         $this->repository = $repository;
+        $this->issueCategoryService = $issueCategoryService;
     }
 
     public function getCategories()
     {
         $appendQuerys = [];
+
+        array_push($appendQuerys, function ($query) {
+            return $this->repository->orderByQuery($query, "category_id", "ASC");
+        });
         
         array_push($appendQuerys, function ($query) {
             return $this->repository->get($query);
@@ -68,5 +77,6 @@ class CategoryService
     public function delete($categoryId)
     {
         $this->repository->deleteModelById($categoryId);
+        // $this->issueCategoryService->deleteByCategoryId($categoryId);
     }
 }

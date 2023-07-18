@@ -44,8 +44,6 @@ class GanttChartController extends Controller
             $this->service->update($issue);
         }
         DB::commit();
-        session_start();
-        $_SESSION["lt_updated_at"] = now();
         Session::put('lt_updated_at', now());
     }
 

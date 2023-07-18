@@ -86,13 +86,23 @@ const onClickDelete = () => {
     <main class="container flex-1 py-5 mx-auto max-w-[1000px]">
 
         <template v-if="props.type == 'View'">
-            <div class="text-right">
-                <Link :href="route('gantt-chart', { 'project_id': props.project.project_id })">
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4">ガントチャート</button>
-                </Link>
-                <Link :href="route('issues', { 'project_id': props.project.project_id })">
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4 mb-2 ms-2">課題一覧</button>
-                </Link>
+            <div class="flex justify-between">
+                <div>
+                    <Link :href="route('projects')">
+                        <button class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4">戻る</button>
+                    </Link>
+                </div>
+                <div>
+                    <Link :href="route('gantt-chart', { 'project_id': props.project.project_id })">
+                        <button class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4">ガントチャート</button>
+                    </Link>
+                    <Link :href="route('board', { 'project_id': props.project.project_id })">
+                        <button class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4 mb-2 ms-2">ボード</button>
+                    </Link>
+                    <Link :href="route('issues', { 'project_id': props.project.project_id })">
+                        <button class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4 mb-2 ms-2">課題一覧</button>
+                    </Link>
+                </div>
             </div>
 
             <div class="flex bg-slate-100 mx-0 py-3 px-3">
@@ -252,9 +262,16 @@ const onClickDelete = () => {
             </div>
 
             <div class="mt-5 mb-3 text-center">
+                <template v-if="props.type == 'Create' || props.type == 'View'">
                     <Link :href="route('projects')">
                         <button type="button" class="bg-slate-300 hover:bg-slate-400 rounded py-1 px-4">戻る</button>
                     </Link>
+                </template>
+                <template v-if="props.type == 'Edit'">
+                    <Link :href="route('view-project', { 'project_id': props.project.project_id })">
+                        <button type="button" class="bg-slate-300 hover:bg-slate-400 rounded py-1 px-4">戻る</button>
+                    </Link>
+                </template>
 
                 <template v-if="props.type == 'View'">
                     <button class="bg-red-500 hover:bg-red-700 text-white rounded py-1 px-4 ms-2"

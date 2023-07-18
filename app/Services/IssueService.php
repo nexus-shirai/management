@@ -213,7 +213,7 @@ class IssueService
         }
     }
 
-    public function updatePeriod(array $data)
+    public function updateIssue(array $data)
     {
         $this->updateModelById($data, $data["issue_id"]);
     }

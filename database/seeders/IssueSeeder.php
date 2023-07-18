@@ -132,7 +132,7 @@ class IssueSeeder extends Seeder
 
             foreach ($issue["issue_categories"] as $issue_category) {
                 IssueCategory::insert([
-                    "issue_id" => $issueData["project_id"],
+                    "issue_id" => $issueData["issue_id"],
                     "category_id" => $issue_category
                 ]);
             }

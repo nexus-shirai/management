@@ -18,6 +18,10 @@ class VersionService
         $appendQuerys = [];
 
         array_push($appendQuerys, function ($query) {
+            return $this->repository->orderByQuery($query, "version_id", "ASC");
+        });
+
+        array_push($appendQuerys, function ($query) {
             return $this->repository->get($query);
         });
 
