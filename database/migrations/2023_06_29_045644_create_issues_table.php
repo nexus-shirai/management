@@ -26,8 +26,8 @@ class CreateIssuesTable extends Migration
             $table->enum('complete_reason', ['完了', '未再現', '対応しない'])->nullable()->comment('完了理由 完了 未再現 対応しない');
             $table->unsignedBigInteger('assignee_id')->comment('担当者ID');
             $table->unsignedBigInteger('milestone_id')->comment('マイルストーンID');
-            $table->dateTime('start_date')->comment('開始日');
-            $table->dateTime('end_date')->comment('終了日');
+            $table->date('start_date')->comment('開始日');
+            $table->date('end_date')->comment('終了日');
             $table->unsignedBigInteger('status_id')->comment('状態ID');
             $table->unsignedBigInteger('kind_id')->comment('種別ID');
             $table->enum('issue_rank', ['parent', 'child', 'grandchild'])->comment('課題ランク 親:parent 子:child 孫:grandchild');

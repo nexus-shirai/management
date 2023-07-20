@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\IssueRequest;
+use App\Models\Issue;
 use App\Services\IssueService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -70,6 +71,24 @@ class IssueController extends Controller
 
     public function store(IssueRequest $request) {
         $data = $request->validated();
+        
+        if ($data['issue_rank'] != Issue::RANK_PARENT) {
+            $request->checkWillOverlapWithParentIssue();
+            $request->checkParentIsCompleted();
+
+            if ($data['timeline_flg']) {
+                DB::beginTransaction();
+                $this->service->updateParentIssueTimeline($data);
+                DB::commit();
+            }
+
+            // hardcoded complete flg to 5
+            if ($data['status_flg'] && $data['status_id'] != 5) {
+                DB::beginTransaction();
+                $this->service->updateParentIssueStatus($data);
+                DB::commit();
+            }
+        }
 
         DB::beginTransaction();
         $this->service->store($data);
@@ -114,6 +133,36 @@ class IssueController extends Controller
 
     public function update(IssueRequest $request) {
         $data = $request->validated();
+
+        $request->checkWillOverlapWithChildIssue();
+
+        if ($data['issue_rank'] != Issue::RANK_PARENT) {
+            $request->checkWillOverlapWithParentIssue();
+            $request->checkParentIsCompleted();
+        } else {
+            $request->checkChildrenNotCompleted();
+        }
+        
+        if ($data['timeline_flg']) {
+            DB::beginTransaction();
+            $this->service->updateChildIssueTimeline($data);
+            DB::commit();
+        }
+
+        if ($data['issue_rank'] != Issue::RANK_PARENT) {
+            if ($data['timeline_flg']) {
+                DB::beginTransaction();
+                $this->service->updateParentIssueTimeline($data);
+                DB::commit();
+            }
+
+            // hardcoded complete flg to 5
+            if ($data['status_flg'] && $data['status_id'] != 5) {
+                DB::beginTransaction();
+                $this->service->updateParentIssueStatus($data);
+                DB::commit();
+            }
+        }
         
         DB::beginTransaction();
         $this->service->update($data);

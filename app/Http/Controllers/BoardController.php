@@ -23,6 +23,7 @@ class BoardController extends Controller
         $data["with_kind"] = true;
         $data["with_issue_categories"] = true;
         $data["with_assignee"] = true;
+        $data["with_child_issues"] = true;
         $issues = $this->service->getIssues($data);
         $statuses = $this->service->getStatuses();
         $kinds = $this->service->getKinds();
@@ -63,6 +64,7 @@ class BoardController extends Controller
         $data["with_kind"] = true;
         $data["with_issue_categories"] = true;
         $data["with_assignee"] = true;
+        $data["with_child_issues"] = true;
         Session::put('lt_updated_at', now());
 
         $issues = $this->service->getIssues($data);

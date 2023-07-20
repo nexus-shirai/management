@@ -52,12 +52,12 @@ const onChangeGrouping = () => {
             }
         }
     });
-
-    groups.value = groups.value.filter(Boolean);
     
     if (grouping.value == 3) { // 親課題
-        groups.value.unshift(null); // 親課題なし
+        groups.value.unshift({}); // 親課題なし
     }
+
+    groups.value = groups.value.filter(Boolean);
 }
 
 let eventSource = null;
@@ -89,6 +89,7 @@ const sync = () => {
             eventSource.close();
             console.log(event);
             console.log(eventSource);
+            setTimeout(sync, 5000);
         }
     } else {
         Swal.fire({

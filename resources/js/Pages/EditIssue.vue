@@ -40,7 +40,9 @@ const form = useForm({
     version_id: props.issue ? props.issue.version_id : null,
     issue_categories: props.issue
         ? props.issue.issue_categories.map(issue_category => issue_category.category_id)
-        : []
+        : [],
+    timeline_flg: false,
+    status_flg: false
 });
 
 const category_options = ref([]);
@@ -65,12 +67,108 @@ if (props.type == "Create") {
 
 const submit = () => {
     if (props.type == "Create") {
-        form.post(route('create-issue', { 'project_id': props.project.project_id }));
+        form.post(route('create-issue', { 'project_id': props.project.project_id }), {
+            onFinish: () => {
+                if (form.errors.timeline) {
+                    confirmTimelineDialog(form.errors.timeline);
+                }
+                if (form.errors.status) {
+                    confirmStatusDialog();
+                }
+            },
+        });
     } else if (props.type == "Edit") {
-        form.put(route('edit-issue', { 'project_id': props.project.project_id, 'issue_id': props.issue.issue_id }));
+        form.put(route('edit-issue', { 'project_id': props.project.project_id, 'issue_id': props.issue.issue_id }), {
+            onFinish: () => {
+                if (form.errors.timeline) {
+                    confirmTimelineDialog(form.errors.timeline);
+                }
+                if (form.errors.status) {
+                    confirmStatusDialog();
+                }
+                if (form.errors.children_not_completed) {
+                    childrenNotCompletedDialog();
+                    form.status_flg = false;
+                    form.timeline_flg = false;
+                }
+            },
+        });
     } else {
         // do nothing
     }
+};
+
+const confirmTimelineDialog = (issue_rank) => {
+    let message = "";
+    switch (issue_rank) {
+        case "parent":
+            message = `親課題の期間が変更されました。<br/>
+                子課題/孫課題の期間と整合性が合わない場合、<br/>
+                親課題に合わせて自動調整されます。`;
+            break;
+        case "child":
+            message = `子課題の期間が変更されました。<br/>
+                親課題/孫課題の期間と整合性が合わない場合、<br/>
+                子課題に合わせて自動調整されます。`;
+            break;
+        case "grandchild":
+            message = `孫課題の期間が変更されました。<br/>
+                親課題/子課題の期間と整合性が合わない場合、<br/>
+                子課題に合わせて自動調整されます。`;
+            break;
+        default:
+            break;
+    }
+
+    Swal.fire({
+        title: '実行しますか？',
+        html: message,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3B82F6',
+        cancelButtonColor: '#94A3B8',
+        confirmButtonText: 'はい',
+        cancelButtonText: 'キャンセル'
+    }).then((result) => {
+        form.timeline_flg = result.isConfirmed;
+        if (result.isConfirmed) {
+            submit();
+        } else {
+            form.status_flg = result.isConfirmed;
+        }
+    });
+}
+
+const confirmStatusDialog = () => {
+    Swal.fire({
+        title: '実行しますか？',
+        html: '親課題が完了状態です。<br/>親課題を処理中に変更しますか？',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3B82F6',
+        cancelButtonColor: '#94A3B8',
+        confirmButtonText: 'はい',
+        cancelButtonText: 'キャンセル'
+    }).then((result) => {
+        form.status_flg = result.isConfirmed;
+        if (result.isConfirmed) {
+            submit();
+        } else {
+            form.timeline_flg = result.isConfirmed;
+        }
+    });
+}
+
+const childrenNotCompletedDialog = () => {
+    Swal.fire({
+        icon: 'warning',
+        toast: true,
+        showConfirmButton: false,
+        position: 'top-end',
+        timer: 2000,
+        timerProgressBar: true,
+        html: '<span class="font-bold">子課題/孫課題が未完了の為、完了に変更できません。</span>',
+    });
 };
 
 if (form.complete_reason == null) {
