@@ -92,7 +92,7 @@ const grid_columns = [
 
 const form = useForm({
     status_id: 0,
-    rank_id: '',
+    issue_rank: '',
     category_id: null,
     milestone_id: null,
     project_user_id: null,
@@ -113,9 +113,9 @@ const onChangeStatus = (status_id) => {
     filterData();
 }
 
-const onChangeRank = (rank_id) => {
-    if (form.rank_id == rank_id) return;
-    form.rank_id = rank_id;
+const onChangeRank = (issue_rank) => {
+    if (form.issue_rank == issue_rank) return;
+    form.issue_rank = issue_rank;
     filterData();
 }
 
@@ -123,7 +123,7 @@ const filterData = () => {
     grid_data.value = [];
     props.issues.forEach(issue => {
         if (!(form.status_id == 0 || form.status_id == issue.status_id)) return;
-        if (!(form.rank_id == '' || form.rank_id == issue.rank_id)) return;
+        if (!(form.issue_rank == '' || form.issue_rank == issue.issue_rank)) return;
         if (!(form.milestone_id == null || form.milestone_id == issue.milestone_id)) return;
         if (!(form.project_user_id == null || form.project_user_id == issue.assignee_id)) return;
         let issue_category_ids = issue.issue_categories.map((issue_category) => {
@@ -198,19 +198,19 @@ const filterData = () => {
                 <div class="py-1">
                     <div class="font-bold inline-block min-w-[80px]"><small>親子課題：</small></div>
                     <div class="inline-block">
-                        <button :class="form.rank_id == '' ? 'bg-blue-500 text-white' : ''" @click="onChangeRank('')"
+                        <button :class="form.issue_rank == '' ? 'bg-blue-500 text-white' : ''" @click="onChangeRank('')"
                             class="hover:bg-blue-700 hover:text-white rounded-full py-1 px-4 ms-2">
                             <small>すべて</small>
                         </button>
-                        <button :class="form.rank_id == 'parent' ? 'bg-blue-500 text-white' : ''" @click="onChangeRank('parent')"
+                        <button :class="form.issue_rank == 'parent' ? 'bg-blue-500 text-white' : ''" @click="onChangeRank('parent')"
                             class="hover:bg-blue-700 hover:text-white rounded-full py-1 px-4 ms-2">
                             <small>親課題</small>
                         </button>
-                        <button :class="form.rank_id == 'child' ? 'bg-blue-500 text-white' : ''" @click="onChangeRank('child')"
+                        <button :class="form.issue_rank == 'child' ? 'bg-blue-500 text-white' : ''" @click="onChangeRank('child')"
                             class="hover:bg-blue-700 hover:text-white rounded-full py-1 px-4 ms-2">
                             <small>子課題</small>
                         </button>
-                        <button :class="form.rank_id == 'grandchild' ? 'bg-blue-500 text-white' : ''" @click="onChangeRank('grandchild')"
+                        <button :class="form.issue_rank == 'grandchild' ? 'bg-blue-500 text-white' : ''" @click="onChangeRank('grandchild')"
                             class="hover:bg-blue-700 hover:text-white rounded-full py-1 px-4 ms-2">
                             <small>孫課題</small>
                         </button>

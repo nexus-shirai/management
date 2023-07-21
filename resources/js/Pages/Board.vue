@@ -425,7 +425,7 @@ const addFilter = (issue) => {
                                                 </div>
                                                 <div class="mb-1">
                                                     <i class="fa-solid fa-circle-user"></i>
-                                                    <small class="ms-2">{{ element.assignee.username }}</small>
+                                                    <small class="ms-2">{{ element.assignee ? element.assignee.username : '設定なし' }}</small>
                                                 </div>
                                                 <div class="mb-1">
                                                     <i class="fa-solid fa-calendar"></i>

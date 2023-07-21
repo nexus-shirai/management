@@ -38,9 +38,9 @@ class IssueRequest extends FormRequest
             'project_id' => ['required', 'integer'],
             'kind_id' => ['required', 'integer'],
             'issue_title' => ['required', 'max:255'],
-            'issue_desc' => ['required', 'max:255'],
+            'issue_desc' => ['nullable', 'max:255'],
             'status_id' => ['required', 'integer'],
-            'assignee_id' => ['required', 'integer'],
+            'assignee_id' => ['nullable', 'integer'],
             'issue_priority' => [
                 'required',
                 Rule::in([
@@ -49,7 +49,7 @@ class IssueRequest extends FormRequest
                     Issue::PRIORITY_HIGH
                 ])
             ],
-            'milestone_id' => ['required', 'integer'],
+            'milestone_id' => ['nullable', 'integer'],
             'estimated_time' => ['nullable', 'integer'],
             'completion_time' => ['nullable', 'integer'],
             'start_date' => ['required', 'date', 'before_or_equal:end_date'],
@@ -64,7 +64,7 @@ class IssueRequest extends FormRequest
                     Issue::COMPLETE_REASON_5,
                 ])
             ],
-            'version_id' => ['required', 'integer'],
+            'version_id' => ['nullable', 'integer'],
             'issue_rank' => [
                 'required',
                 Rule::in([
@@ -73,11 +73,18 @@ class IssueRequest extends FormRequest
                     Issue::RANK_GRANDCHILD,
                 ])
             ],
-            'parent_issue_id' => ['nullable', 'required_unless:issue_rank,' . Issue::RANK_PARENT, 'integer'],
-            'issue_categories' => ['array', 'required'],
+            'issue_categories' => ['array', 'nullable'],
             'timeline_flg' => ['required', 'boolean'],
             'status_flg' => ['required', 'boolean'],
         ];
+
+        if ($this->issue_rank) {
+            $rules['parent_issue_id'] = [
+                'nullable',
+                'required_unless:issue_rank,' . Issue::RANK_PARENT,
+                'integer'
+            ];
+        }
 
         if ($this->isMethod('put')) {
             $editRules = [

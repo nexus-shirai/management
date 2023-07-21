@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Repositories\IssueRepository;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 
 class IssueService
 {
@@ -416,6 +417,7 @@ class IssueService
     public function store(array $data)
     {
         $data["issue_cd"] = $this->generateIssueCode($data["project_id"]);
+        $data['create_user_id'] = Auth::user()->user_id;
         $issue = $this->repository->createModel($data);
         foreach ($data["issue_categories"] as $issue_category) {
             $issueCategoryData = [
