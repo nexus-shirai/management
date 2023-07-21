@@ -11,7 +11,50 @@ const props = defineProps({
   type: String,
   users: Object,
   project: Object,
+  statuses: Object,
+  milestones: Object,
 });
+
+let statuses = [];
+let milestones = [];
+let total_issues = props.project.issues ? props.project.issues.length : 0;
+
+if (props.statuses) {
+    props.statuses.forEach(status => {
+        statuses.push({
+            'status_name' : status.status_name,
+            'hex_color' : status.hex_color,
+            'count': props.project.issues.filter(issue => issue.status_id == status.status_id).length
+        });
+    });
+}
+
+if (props.milestones) {
+    props.milestones.forEach(milestone => {
+        milestones[milestone.milestone_id] = [];
+        let total_milestone_issues = props.project.issues.filter(issue => issue.milestone_id == milestone.milestone_id).length;
+
+        milestones[milestone.milestone_id]['milestone_name'] = milestone.milestone_name;
+        milestones[milestone.milestone_id]['issues'] = [];
+
+        props.statuses.forEach(status => {
+            let count = props.project.issues.filter(issue => issue.status_id == status.status_id && issue.milestone_id == milestone.milestone_id).length;
+            let percentage = (count / total_milestone_issues) * 100;
+
+            milestones[milestone.milestone_id]['issues'].push({
+                'hex_color' : status.hex_color,
+                'percentage': percentage
+            });
+
+            // hardcoded complete flg to 5
+            if (status.status_id == 5) {
+                milestones[milestone.milestone_id]['completed_percentage'] = percentage
+            }
+        });
+    });
+    milestones = milestones.filter(Boolean);
+}
+
 
 const user_options = ref([]);
 
@@ -128,29 +171,25 @@ const onClickDelete = () => {
                         <div class="font-bold mb-2">状態</div>
                         <div class="bg-slate-200 px-3 py-3">
                             <div class="flex">
-                                <div class="inline-block bg-rose-300" style="width: 25%; height: 30px;"></div>
-                                <div class="inline-block bg-blue-200" style="width: 45%; height: 30px;"></div>
-                                <div class="inline-block bg-green-300" style="width: 30%; height: 30px;"></div>
+                                <template v-for="status in statuses">
+                                    <div class="inline-block h-[30px]"
+                                        :style="{
+                                        width: ((status.count / total_issues) * 100) + '%',
+                                        backgroundColor: status.hex_color}"></div>
+                                </template>
                             </div>
                             <div class="mt-3">
-                                <div class="inline-block text-center">
-                                    <div><small>Todo</small></div>
-                                    <div>
-                                        <span class="bg-rose-300 rounded-full inline-block min-w-[70px]"><small>25</small></span>
+                                <template v-for="status in statuses">
+                                    <div class="inline-block text-center mb-1">
+                                        <div><small>{{ status.status_name }}</small></div>
+                                        <div>
+                                            <span class="rounded-full inline-block min-w-[70px] pb-1 me-2"
+                                                :style="{ backgroundColor: status.hex_color }">
+                                                <small>{{ status.count }}</small>
+                                            </span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="inline-block text-center ms-2">
-                                    <div><small>完了</small></div>
-                                    <div>
-                                        <span class="bg-blue-200 rounded-full inline-block min-w-[70px]"><small>45</small></span>
-                                    </div>
-                                </div>
-                                <div class="inline-block text-center ms-2">
-                                    <div><small>未着手</small></div>
-                                    <div>
-                                        <span class="bg-green-300 rounded-full inline-block min-w-[70px]"><small>30</small></span>
-                                    </div>
-                                </div>
+                                </template>
                             </div>
                         </div>
                     </div>
@@ -158,48 +197,28 @@ const onClickDelete = () => {
                     <div class="flex-1 px-2">
                         <div class="font-bold mb-2">マイルストーン</div>
                         <div class="bg-slate-200 px-3 py-3">
-                            <div class="mb-2">
-                                <div class="font-bold">初期リリース</div>
-                                <div class="flex">
-                                    <div style="width: 80%;">
-                                        <div class="flex">
-                                            <div class="inline-block bg-rose-300" style="width: 15%; height: 30px;"></div>
-                                            <div class="inline-block bg-green-300" style="width: 85%; height: 30px;"></div>
+
+                            <template v-for="milestone in milestones">
+                                <div class="mb-2">
+                                    <div class="font-bold">{{ milestone.milestone_name }}</div>
+                                    <div class="flex">
+                                        <div style="width: 82%;">
+                                            <div class="flex">
+                                                <template v-for="issue in milestone.issues">
+                                                    <div class="inline-block h-[30px]"
+                                                        :style="{ backgroundColor: issue.hex_color, width: issue.percentage + '%' }">
+                                                    </div>
+                                                </template>
+                                            </div>
+                                        </div>
+                                        <div style="width: 18%;">
+                                            <div class="text-end">
+                                                <small>{{ milestone.completed_percentage }}%<span class="ms-1">完了</span></small>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div style="width: 20%;">
-                                        <div class="text-end">80%完了</div>
-                                    </div>
                                 </div>
-                            </div>
-                            <div class="mb-2">
-                                <div class="font-bold">2次リリース</div>
-                                <div class="flex">
-                                    <div style="width: 80%;">
-                                        <div class="flex">
-                                            <div class="inline-block bg-rose-300" style="width: 50%; height: 30px;"></div>
-                                            <div class="inline-block bg-green-300" style="width: 50%; height: 30px;"></div>
-                                        </div>
-                                    </div>
-                                    <div style="width: 20%;">
-                                        <div class="text-end">50%完了</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="mb-2">
-                                <div class="font-bold">追加機能対応</div>
-                                <div class="flex">
-                                    <div style="width: 80%;">
-                                        <div class="flex">
-                                            <div class="inline-block bg-green-300" style="width: 30%; height: 30px;"></div>
-                                            <div class="inline-block bg-blue-200" style="width: 70%; height: 30px;"></div>
-                                        </div>
-                                    </div>
-                                    <div style="width: 20%;">
-                                        <div class="text-end">30%完了</div>
-                                    </div>
-                                </div>
-                            </div>
+                            </template>
                         </div>
                     </div>
                 </div>

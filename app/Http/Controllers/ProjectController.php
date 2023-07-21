@@ -31,15 +31,22 @@ class ProjectController extends Controller
     public function view(Request $request) {
         $data["project_id"] = $request->project_id;
         $data["with_project_users"] = true;
+        $data["with_issues"] = true;
         $projectData = $this->service->getProjectData($data);
+
         $data = [];
         $data["user_type"] = User::USER_TYPE_GENERAL;
         $users = $this->service->getUsers($data);
+        
+        $statuses = $this->service->getStatuses();
+        $milestones = $this->service->getMilestones();
 
         return Inertia::render("EditProject", [
             "type" => "View",
             "project" => $projectData,
-            "users" => $users
+            "users" => $users,
+            "statuses" => $statuses,
+            "milestones" => $milestones,
         ]);
     }
 
