@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProjectRequest;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
+use App\Services\IssueService;
 use App\Services\ProjectService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -13,9 +14,14 @@ use Inertia\Inertia;
 class ProjectController extends Controller
 {
     protected $service;
+    protected $issueService;
 
-    function __construct(ProjectService $service) {
+    function __construct(
+        ProjectService $service,
+        IssueService $issueService
+    ) {
         $this->service = $service;
+        $this->issueService = $issueService;
     }
 
     public function index() {
@@ -80,6 +86,7 @@ class ProjectController extends Controller
         $projectId = $request->project_id;
         DB::beginTransaction();
         $this->service->delete($projectId);
+        $this->issueService->deleteByProjectId($projectId);
         DB::commit();
 
         return redirect()->intended(RouteServiceProvider::HOME)

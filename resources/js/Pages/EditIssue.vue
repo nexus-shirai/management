@@ -186,7 +186,7 @@ const onChangeRank = () => {
 const onClickDelete = () => {
     Swal.fire({
         title: '削除しますか?',
-        text: "戻すことはできません。",
+        html: "子課題・孫課題も削除対象になります。<br/>戻すことはできません。",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3B82F6',

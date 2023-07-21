@@ -21601,7 +21601,7 @@ __webpack_require__.r(__webpack_exports__);
     var onClickDelete = function onClickDelete() {
       sweetalert2__WEBPACK_IMPORTED_MODULE_4___default().fire({
         title: '削除しますか?',
-        text: "戻すことはできません。",
+        html: "子課題・孫課題も削除対象になります。<br/>戻すことはできません。",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3B82F6',
@@ -21850,10 +21850,10 @@ __webpack_require__.r(__webpack_exports__);
     }
     if (props.milestones) {
       props.milestones.forEach(function (milestone) {
-        milestones[milestone.milestone_id] = [];
         var total_milestone_issues = props.project.issues.filter(function (issue) {
           return issue.milestone_id == milestone.milestone_id;
         }).length;
+        milestones[milestone.milestone_id] = {};
         milestones[milestone.milestone_id]['milestone_name'] = milestone.milestone_name;
         milestones[milestone.milestone_id]['issues'] = [];
         props.statuses.forEach(function (status) {
@@ -21861,16 +21861,42 @@ __webpack_require__.r(__webpack_exports__);
             return issue.status_id == status.status_id && issue.milestone_id == milestone.milestone_id;
           }).length;
           var percentage = count / total_milestone_issues * 100;
-          milestones[milestone.milestone_id]['issues'].push({
+          if (!isNaN(percentage)) {
+            milestones[milestone.milestone_id]['issues'].push({
+              'hex_color': status.hex_color,
+              'percentage': percentage
+            });
+
+            // hardcoded complete flg to 5
+            if (status.status_id == 5) {
+              milestones[milestone.milestone_id]['completed_percentage'] = percentage;
+            }
+          }
+        });
+      });
+      milestones.unshift({
+        'milestone_name': '設定なし',
+        'issues': []
+      });
+      var total_milestone_issues = props.project.issues.filter(function (issue) {
+        return issue.milestone_id == null;
+      }).length;
+      props.statuses.forEach(function (status) {
+        var count = props.project.issues.filter(function (issue) {
+          return issue.status_id == status.status_id && issue.milestone_id == null;
+        }).length;
+        var percentage = count / total_milestone_issues * 100;
+        if (!isNaN(percentage)) {
+          milestones[0].issues.push({
             'hex_color': status.hex_color,
             'percentage': percentage
           });
 
           // hardcoded complete flg to 5
           if (status.status_id == 5) {
-            milestones[milestone.milestone_id]['completed_percentage'] = percentage;
+            milestones[0]['completed_percentage'] = percentage;
           }
-        });
+        }
       });
       milestones = milestones.filter(Boolean);
     }
@@ -21921,7 +21947,7 @@ __webpack_require__.r(__webpack_exports__);
     var onClickDelete = function onClickDelete() {
       sweetalert2__WEBPACK_IMPORTED_MODULE_5___default().fire({
         title: '削除しますか?',
-        text: "戻すことはできません。",
+        html: "紐づいている課題も削除対象になります。<br/>戻すことはできません。",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3B82F6',
@@ -25358,34 +25384,52 @@ var _hoisted_24 = {
   "class": "font-bold"
 };
 var _hoisted_25 = {
-  "class": "flex"
+  key: 0,
+  "class": "ms-2"
 };
 var _hoisted_26 = {
+  key: 0,
+  "class": "flex"
+};
+var _hoisted_27 = {
   style: {
     "width": "82%"
   }
 };
-var _hoisted_27 = {
+var _hoisted_28 = {
   "class": "flex"
 };
-var _hoisted_28 = {
+var _hoisted_29 = {
   style: {
     "width": "18%"
   }
 };
-var _hoisted_29 = {
+var _hoisted_30 = {
   "class": "text-end"
 };
-var _hoisted_30 = /*#__PURE__*/_withScopeId(function () {
+var _hoisted_31 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
     "class": "ms-1"
   }, "完了", -1 /* HOISTED */);
 });
-var _hoisted_31 = ["onSubmit"];
 var _hoisted_32 = {
+  key: 1,
+  "class": "mb-7"
+};
+var _hoisted_33 = {
+  "class": "bg-white text-center py-3"
+};
+var _hoisted_34 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" まだ課題が作成していません。");
+var _hoisted_35 = /*#__PURE__*/_withScopeId(function () {
+  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */);
+});
+var _hoisted_36 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" 課題の追加 ");
+var _hoisted_37 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("を行ってください。 ");
+var _hoisted_38 = ["onSubmit"];
+var _hoisted_39 = {
   "class": "mb-2 flex"
 };
-var _hoisted_33 = /*#__PURE__*/_withScopeId(function () {
+var _hoisted_40 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "font-bold w-[170px]"
   }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" プロジェクトコード"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("sup", {
@@ -25394,24 +25438,24 @@ var _hoisted_33 = /*#__PURE__*/_withScopeId(function () {
     "class": "fa-solid fa-asterisk"
   })])], -1 /* HOISTED */);
 });
-var _hoisted_34 = ["disabled"];
-var _hoisted_35 = /*#__PURE__*/_withScopeId(function () {
+var _hoisted_41 = ["disabled"];
+var _hoisted_42 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("small", {
     "class": "text-slate-400"
   }, "半角英大文字と半角数字とアンダースコアが使用できます。")], -1 /* HOISTED */);
 });
-var _hoisted_36 = /*#__PURE__*/_withScopeId(function () {
+var _hoisted_43 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("small", {
     "class": "text-slate-400"
   }, "例：プロジェクト名がバックログ→コードは「BLG_2」")], -1 /* HOISTED */);
 });
-var _hoisted_37 = {
+var _hoisted_44 = {
   "class": "text-red-500"
 };
-var _hoisted_38 = {
+var _hoisted_45 = {
   "class": "mb-2 flex"
 };
-var _hoisted_39 = /*#__PURE__*/_withScopeId(function () {
+var _hoisted_46 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "font-bold w-[170px]"
   }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" プロジェクト名"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("sup", {
@@ -25420,14 +25464,14 @@ var _hoisted_39 = /*#__PURE__*/_withScopeId(function () {
     "class": "fa-solid fa-asterisk"
   })])], -1 /* HOISTED */);
 });
-var _hoisted_40 = ["disabled"];
-var _hoisted_41 = {
+var _hoisted_47 = ["disabled"];
+var _hoisted_48 = {
   "class": "text-red-500"
 };
-var _hoisted_42 = {
+var _hoisted_49 = {
   "class": "mb-2 flex"
 };
-var _hoisted_43 = /*#__PURE__*/_withScopeId(function () {
+var _hoisted_50 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "font-bold w-[170px]"
   }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" プロジェクト概要"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("sup", {
@@ -25436,22 +25480,22 @@ var _hoisted_43 = /*#__PURE__*/_withScopeId(function () {
     "class": "fa-solid fa-asterisk"
   })])], -1 /* HOISTED */);
 });
-var _hoisted_44 = {
+var _hoisted_51 = {
   "class": "flex-1"
 };
-var _hoisted_45 = ["disabled"];
-var _hoisted_46 = {
+var _hoisted_52 = ["disabled"];
+var _hoisted_53 = {
   "class": "text-red-500"
 };
-var _hoisted_47 = /*#__PURE__*/_withScopeId(function () {
+var _hoisted_54 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("hr", {
     "class": "mb-2"
   }, null, -1 /* HOISTED */);
 });
-var _hoisted_48 = {
+var _hoisted_55 = {
   "class": "mb-2 flex"
 };
-var _hoisted_49 = /*#__PURE__*/_withScopeId(function () {
+var _hoisted_56 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "font-bold w-[170px]"
   }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" 参加ユーザー"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("sup", {
@@ -25460,28 +25504,28 @@ var _hoisted_49 = /*#__PURE__*/_withScopeId(function () {
     "class": "fa-solid fa-asterisk"
   })])], -1 /* HOISTED */);
 });
-var _hoisted_50 = {
+var _hoisted_57 = {
   "class": "flex-1"
 };
-var _hoisted_51 = {
+var _hoisted_58 = {
   "class": "text-red-500"
 };
-var _hoisted_52 = {
+var _hoisted_59 = {
   "class": "mt-5 mb-3 text-center"
 };
-var _hoisted_53 = /*#__PURE__*/_withScopeId(function () {
+var _hoisted_60 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     type: "button",
     "class": "bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4 ms-2"
   }, " 編集画面へ ", -1 /* HOISTED */);
 });
-var _hoisted_54 = {
+var _hoisted_61 = {
   key: 1,
   type: "submit",
   "class": "bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4 ms-2"
 };
-var _hoisted_55 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" 保存 ");
-var _hoisted_56 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" 編集 ");
+var _hoisted_62 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" 保存 ");
+var _hoisted_63 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" 編集 ");
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_Head = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Head");
   var _component_Link = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Link");
@@ -25544,7 +25588,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return [_hoisted_10];
     }),
     _: 1 /* STABLE */
-  }, 8 /* PROPS */, ["href"]), _hoisted_11, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_12, "プロジェクト" + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.title), 1 /* TEXT */)]), $setup.props.type == 'View' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_13, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [_hoisted_15, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_16, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_17, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($setup.statuses, function (status) {
+  }, 8 /* PROPS */, ["href"]), _hoisted_11, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_12, "プロジェクト" + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.title), 1 /* TEXT */)]), $setup.props.type == 'View' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+    key: 0
+  }, [$setup.props.project.issues.length ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_13, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [_hoisted_15, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_16, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_17, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($setup.statuses, function (status) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
       "class": "inline-block h-[30px]",
       style: (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeStyle)({
@@ -25560,7 +25606,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       })
     }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("small", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(status.count), 1 /* TEXT */)], 4 /* STYLE */)])]);
   }), 256 /* UNKEYED_FRAGMENT */))])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_20, [_hoisted_21, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_22, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($setup.milestones, function (milestone) {
-    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_23, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_24, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(milestone.milestone_name), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_25, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_26, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_27, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(milestone.issues, function (issue) {
+    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_23, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_24, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(milestone.milestone_name), 1 /* TEXT */), milestone.issues.length == 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("small", _hoisted_25, "（0件）")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), milestone.issues.length ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_26, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_27, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_28, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(milestone.issues, function (issue) {
       return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
         "class": "inline-block h-[30px]",
         style: (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeStyle)({
@@ -25568,10 +25614,20 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           width: issue.percentage + '%'
         })
       }, null, 4 /* STYLE */);
-    }), 256 /* UNKEYED_FRAGMENT */))])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_28, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_29, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("small", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(milestone.completed_percentage) + "%", 1 /* TEXT */), _hoisted_30])])])])]);
-  }), 256 /* UNKEYED_FRAGMENT */))])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
+    }), 256 /* UNKEYED_FRAGMENT */))])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_29, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_30, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("small", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(milestone.completed_percentage) + "%", 1 /* TEXT */), _hoisted_31])])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]);
+  }), 256 /* UNKEYED_FRAGMENT */))])])])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_32, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_33, [_hoisted_34, _hoisted_35, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+    href: _ctx.route('issues', {
+      'project_id': $setup.props.project.project_id
+    }),
+    "class": "text-blue-700 hover:underline font-bold"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [_hoisted_36];
+    }),
+    _: 1 /* STABLE */
+  }, 8 /* PROPS */, ["href"]), _hoisted_37])]))], 64 /* STABLE_FRAGMENT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
     onSubmit: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)($setup.submit, ["prevent"])
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_32, [_hoisted_33, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_39, [_hoisted_40, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
     placeholder: "プロジェクトコード",
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["min-w-[300px] rounded py-1", $setup.form.errors.project_cd ? 'border-red-500' : '']),
@@ -25579,7 +25635,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return $setup.form.project_cd = $event;
     }),
     disabled: $setup.props.type == 'View' || $setup.props.type == 'Edit'
-  }, null, 10 /* CLASS, PROPS */, _hoisted_34), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $setup.form.project_cd]]), _hoisted_35, _hoisted_36, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("small", _hoisted_37, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.form.errors.project_cd), 1 /* TEXT */)])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_38, [_hoisted_39, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, null, 10 /* CLASS, PROPS */, _hoisted_41), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $setup.form.project_cd]]), _hoisted_42, _hoisted_43, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("small", _hoisted_44, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.form.errors.project_cd), 1 /* TEXT */)])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_45, [_hoisted_46, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
     placeholder: "プロジェクト名",
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["min-w-[300px] rounded py-1", $setup.form.errors.project_name ? 'border-red-500' : '']),
@@ -25587,7 +25643,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return $setup.form.project_name = $event;
     }),
     disabled: $setup.props.type == 'View'
-  }, null, 10 /* CLASS, PROPS */, _hoisted_40), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $setup.form.project_name]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("small", _hoisted_41, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.form.errors.project_name), 1 /* TEXT */)])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_42, [_hoisted_43, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_44, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("textarea", {
+  }, null, 10 /* CLASS, PROPS */, _hoisted_47), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $setup.form.project_name]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("small", _hoisted_48, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.form.errors.project_name), 1 /* TEXT */)])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_49, [_hoisted_50, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_51, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("textarea", {
     rows: "3",
     placeholder: "プロジェクト概要",
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["w-full rounded py-1", $setup.form.errors.project_desc ? 'border-red-500' : '']),
@@ -25595,7 +25651,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return $setup.form.project_desc = $event;
     }),
     disabled: $setup.props.type == 'View'
-  }, null, 10 /* CLASS, PROPS */, _hoisted_45), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $setup.form.project_desc]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("small", _hoisted_46, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.form.errors.project_desc), 1 /* TEXT */)])])]), _hoisted_47, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_48, [_hoisted_49, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_50, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["MultiSelect"], {
+  }, null, 10 /* CLASS, PROPS */, _hoisted_52), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $setup.form.project_desc]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("small", _hoisted_53, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.form.errors.project_desc), 1 /* TEXT */)])])]), _hoisted_54, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_55, [_hoisted_56, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_57, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["MultiSelect"], {
     modelValue: $setup.form.project_users,
     "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
       return $setup.form.project_users = $event;
@@ -25607,7 +25663,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     searchable: true,
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)($setup.form.errors.project_users ? 'border-red-500' : ''),
     disabled: $setup.props.type == 'View'
-  }, null, 8 /* PROPS */, ["modelValue", "options", "class", "disabled"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("small", _hoisted_51, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.form.errors.project_users), 1 /* TEXT */)])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_52, [$setup.props.type == 'View' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+  }, null, 8 /* PROPS */, ["modelValue", "options", "class", "disabled"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("small", _hoisted_58, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.form.errors.project_users), 1 /* TEXT */)])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_59, [$setup.props.type == 'View' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
     key: 0
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     "class": "bg-red-500 hover:bg-red-700 text-white rounded py-1 px-4",
@@ -25619,14 +25675,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     })
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_53];
+      return [_hoisted_60];
     }),
     _: 1 /* STABLE */
-  }, 8 /* PROPS */, ["href"])], 64 /* STABLE_FRAGMENT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $props.type == 'Create' || $props.type == 'Edit' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", _hoisted_54, [$props.type == 'Create' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+  }, 8 /* PROPS */, ["href"])], 64 /* STABLE_FRAGMENT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $props.type == 'Create' || $props.type == 'Edit' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", _hoisted_61, [$props.type == 'Create' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
     key: 0
-  }, [_hoisted_55], 64 /* STABLE_FRAGMENT */)) : $props.type == 'Edit' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+  }, [_hoisted_62], 64 /* STABLE_FRAGMENT */)) : $props.type == 'Edit' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
     key: 1
-  }, [_hoisted_56], 64 /* STABLE_FRAGMENT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])], 40 /* PROPS, HYDRATE_EVENTS */, _hoisted_31)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["AppFooter"])], 64 /* STABLE_FRAGMENT */);
+  }, [_hoisted_63], 64 /* STABLE_FRAGMENT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])], 40 /* PROPS, HYDRATE_EVENTS */, _hoisted_38)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["AppFooter"])], 64 /* STABLE_FRAGMENT */);
 }
 
 /***/ }),

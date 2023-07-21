@@ -31,6 +31,11 @@ class ProjectUserRepository
         return $this->model()->where('project_id', $projectId)->delete();
     }
 
+    public function deleteByUserId($userId)
+    {
+        return $this->model()->where('user_id', $userId)->delete();
+    }
+
     public function createModel($params)
     {
         return $this->model()->create($params);

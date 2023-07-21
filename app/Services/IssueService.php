@@ -66,6 +66,20 @@ class IssueService
             });
         }
 
+        if (isset($data["milestone_id"])) {
+            $milestoneId = $data["milestone_id"];
+            array_push($appendQuerys, function ($query) use ($milestoneId) {
+                return $this->repository->addWhereMilestoneIdQuery($query, $milestoneId);
+            });
+        }
+
+        if (isset($data["version_id"])) {
+            $versionId = $data["version_id"];
+            array_push($appendQuerys, function ($query) use ($versionId) {
+                return $this->repository->addWhereVersionIdQuery($query, $versionId);
+            });
+        }
+
         if (isset($data["with_kind"]) && $data["with_kind"]) {
             array_push($appendQuerys, function ($query) {
                 return $this->repository->addWithKindQuery($query);
@@ -457,6 +471,17 @@ class IssueService
         $this->issueCategoryService->deleteByIssueId($issueId);
     }
 
+    public function deleteByProjectId($projectId)
+    {
+        $data['project'] = $projectId;
+        $issues = $this->getIssues($data);
+        foreach ($issues as $issue) {
+            $this->issueCategoryService->deleteByIssueId($issue['issue_id']);
+        }
+
+        $this->repository->deleteByProjectId($projectId);
+    }
+
     private function generateIssueCode($project_id) {
         $params["project_id"] = $project_id;
         $projectData = $this->getProjectData($params);
@@ -489,5 +514,24 @@ class IssueService
     public function delete($issueId)
     {
         $this->repository->deleteModelById($issueId);
+        $this->issueCategoryService->deleteByIssueId($issueId);
+
+        $data['issue_id'] = $issueId;
+        $data['with_child_issues'] = true;
+        $issue = $this->getIssueData($data);
+
+        if ($issue['child_issues']) {
+            foreach ($issue['child_issues'] as $child_issue) {
+                $this->repository->deleteModelById($child_issue['issue_id']);
+                $this->issueCategoryService->deleteByIssueId($child_issue['issue_id']);
+
+                if ($child_issue['child_issues']) {
+                    foreach ($child_issue['child_issues'] as $grandchild_issue) {
+                        $this->repository->deleteModelById($grandchild_issue['issue_id']);
+                        $this->issueCategoryService->deleteByIssueId($grandchild_issue['issue_id']);
+                    }
+                }
+            }
+        }
     }
 }
