@@ -16,6 +16,8 @@ class CreateKindsTable extends Migration
         Schema::create('kinds', function (Blueprint $table) {
             $table->bigIncrements('kind_id')->comment('種別ID');
             $table->string('kind_name')->unique()->comment('種別名');
+            $table->string('kind_desc')->comment('種別内容');
+            $table->string('hex_color', 7)->unique()->comment('カラーコード');
         });
     }
 

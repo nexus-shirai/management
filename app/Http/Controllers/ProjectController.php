@@ -17,6 +17,16 @@ class ProjectController extends Controller
         $this->service = $service;
     }
 
+    public function index() {
+        return Inertia::render("Projects");
+    }
+
+    public function search() {
+        $projects = $this->service->getProjects();
+
+        return response()->json($projects);
+    }
+
     public function view(Request $request) {
         $data["project_id"] = $request->project_id;
         $data["with_project_users"] = true;

@@ -39,7 +39,7 @@ const grid_columns = [
 ];
 
 const goToEdit = (milestone_id) => {
-    location.href = route('edit-milestone', { 'milestone_id': milestone_id });
+    form.get(route('edit-milestone', { 'milestone_id': milestone_id }));
 };
 const onClickDelete = (milestone_id) => {
     Swal.fire({

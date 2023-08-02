@@ -85,86 +85,94 @@ const onClickDelete = () => {
 
     <main class="container flex-1 py-5 mx-auto max-w-[1000px]">
 
-        <div v-if="props.type == 'View'" class="flex bg-slate-100 mx-0 py-3 px-3">
-            <div class="flex-1 px-2">
-                <div class="font-bold mb-2">状態</div>
-                <div class="bg-slate-200 px-3 py-3">
-                    <div class="flex">
-                        <div class="inline-block bg-rose-300" style="width: 25%; height: 30px;"></div>
-                        <div class="inline-block bg-blue-200" style="width: 45%; height: 30px;"></div>
-                        <div class="inline-block bg-green-300" style="width: 30%; height: 30px;"></div>
-                    </div>
-                    <div class="mt-3">
-                        <div class="inline-block text-center">
-                            <div><small>Todo</small></div>
-                            <div>
-                                <span class="bg-rose-300 rounded-full inline-block min-w-[70px]"><small>25</small></span>
-                            </div>
-                        </div>
-                        <div class="inline-block text-center ms-2">
-                            <div><small>完了</small></div>
-                            <div>
-                                <span class="bg-blue-200 rounded-full inline-block min-w-[70px]"><small>45</small></span>
-                            </div>
-                        </div>
-                        <div class="inline-block text-center ms-2">
-                            <div><small>未着手</small></div>
-                            <div>
-                                <span class="bg-green-300 rounded-full inline-block min-w-[70px]"><small>30</small></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <template v-if="props.type == 'View'">
+            <div class="text-right">
+                <Link :href="route('issues', { 'project_id': props.project.project_id })">
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4 mb-2">課題一覧</button>
+                </Link>
             </div>
 
-            <div class="flex-1 px-2">
-                <div class="font-bold mb-2">マイルストーン</div>
-                <div class="bg-slate-200 px-3 py-3">
-                    <div class="mb-2">
-                        <div class="font-bold">初期リリース</div>
+            <div class="flex bg-slate-100 mx-0 py-3 px-3">
+                <div class="flex-1 px-2">
+                    <div class="font-bold mb-2">状態</div>
+                    <div class="bg-slate-200 px-3 py-3">
                         <div class="flex">
-                            <div style="width: 80%;">
-                                <div class="flex">
-                                    <div class="inline-block bg-rose-300" style="width: 15%; height: 30px;"></div>
-                                    <div class="inline-block bg-green-300" style="width: 85%; height: 30px;"></div>
+                            <div class="inline-block bg-rose-300" style="width: 25%; height: 30px;"></div>
+                            <div class="inline-block bg-blue-200" style="width: 45%; height: 30px;"></div>
+                            <div class="inline-block bg-green-300" style="width: 30%; height: 30px;"></div>
+                        </div>
+                        <div class="mt-3">
+                            <div class="inline-block text-center">
+                                <div><small>Todo</small></div>
+                                <div>
+                                    <span class="bg-rose-300 rounded-full inline-block min-w-[70px]"><small>25</small></span>
                                 </div>
                             </div>
-                            <div style="width: 20%;">
-                                <div class="text-end">80%完了</div>
+                            <div class="inline-block text-center ms-2">
+                                <div><small>完了</small></div>
+                                <div>
+                                    <span class="bg-blue-200 rounded-full inline-block min-w-[70px]"><small>45</small></span>
+                                </div>
+                            </div>
+                            <div class="inline-block text-center ms-2">
+                                <div><small>未着手</small></div>
+                                <div>
+                                    <span class="bg-green-300 rounded-full inline-block min-w-[70px]"><small>30</small></span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="mb-2">
-                        <div class="font-bold">2次リリース</div>
-                        <div class="flex">
-                            <div style="width: 80%;">
-                                <div class="flex">
-                                    <div class="inline-block bg-rose-300" style="width: 50%; height: 30px;"></div>
-                                    <div class="inline-block bg-green-300" style="width: 50%; height: 30px;"></div>
+                </div>
+
+                <div class="flex-1 px-2">
+                    <div class="font-bold mb-2">マイルストーン</div>
+                    <div class="bg-slate-200 px-3 py-3">
+                        <div class="mb-2">
+                            <div class="font-bold">初期リリース</div>
+                            <div class="flex">
+                                <div style="width: 80%;">
+                                    <div class="flex">
+                                        <div class="inline-block bg-rose-300" style="width: 15%; height: 30px;"></div>
+                                        <div class="inline-block bg-green-300" style="width: 85%; height: 30px;"></div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div style="width: 20%;">
-                                <div class="text-end">50%完了</div>
+                                <div style="width: 20%;">
+                                    <div class="text-end">80%完了</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="mb-2">
-                        <div class="font-bold">追加機能対応</div>
-                        <div class="flex">
-                            <div style="width: 80%;">
-                                <div class="flex">
-                                    <div class="inline-block bg-green-300" style="width: 30%; height: 30px;"></div>
-                                    <div class="inline-block bg-blue-200" style="width: 70%; height: 30px;"></div>
+                        <div class="mb-2">
+                            <div class="font-bold">2次リリース</div>
+                            <div class="flex">
+                                <div style="width: 80%;">
+                                    <div class="flex">
+                                        <div class="inline-block bg-rose-300" style="width: 50%; height: 30px;"></div>
+                                        <div class="inline-block bg-green-300" style="width: 50%; height: 30px;"></div>
+                                    </div>
+                                </div>
+                                <div style="width: 20%;">
+                                    <div class="text-end">50%完了</div>
                                 </div>
                             </div>
-                            <div style="width: 20%;">
-                                <div class="text-end">30%完了</div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="font-bold">追加機能対応</div>
+                            <div class="flex">
+                                <div style="width: 80%;">
+                                    <div class="flex">
+                                        <div class="inline-block bg-green-300" style="width: 30%; height: 30px;"></div>
+                                        <div class="inline-block bg-blue-200" style="width: 70%; height: 30px;"></div>
+                                    </div>
+                                </div>
+                                <div style="width: 20%;">
+                                    <div class="text-end">30%完了</div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </template>
 
         <form class="bg-slate-100 py-2 px-3 my-2" @submit.prevent="submit">
             <div class="font-bold mb-5">プロジェクト{{ title }}</div>
@@ -176,7 +184,7 @@ const onClickDelete = () => {
                 <div>
                     <input type="text" placeholder="プロジェクトコード" class="min-w-[300px] rounded py-1"
                         v-model="form.project_cd" :class="form.errors.project_cd ? 'border-red-500' : ''"
-                        :disabled="props.type == 'View'">
+                        :disabled="props.type == 'View' || props.type == 'Edit'">
                     <div>
                         <small class="text-slate-400">半角英大文字と半角数字とアンダースコアが使用できます。</small>
                     </div>
@@ -241,16 +249,9 @@ const onClickDelete = () => {
             </div>
 
             <div class="mt-5 mb-3 text-center">
-                <template v-if="props.type == 'View' || props.type == 'Create'">
-                    <Link :href="route('dashboard')">
+                    <Link :href="route('projects')">
                         <button type="button" class="bg-slate-300 hover:bg-slate-400 rounded py-1 px-4">戻る</button>
                     </Link>
-                </template>
-                <template v-if="props.type == 'Edit'">
-                    <Link :href="route('view-project', { 'project_id': props.project.project_id })">
-                        <button type="button" class="bg-slate-300 hover:bg-slate-400 rounded py-1 px-4">戻る</button>
-                    </Link>
-                </template>
 
                 <template v-if="props.type == 'View'">
                     <button class="bg-red-500 hover:bg-red-700 text-white rounded py-1 px-4 ms-2"

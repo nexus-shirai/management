@@ -2,13 +2,13 @@
 
 namespace App\Repositories;
 
-use App\Models\ProjectUser;
+use App\Models\IssueCategory;
 
-class ProjectUserRepository
+class IssueCategoryRepository
 {
     public function getModelClass()
     {
-        return ProjectUser::class;
+        return IssueCategory::class;
     }
 
     public function model()
@@ -26,9 +26,14 @@ class ProjectUserRepository
         return $query->first();
     }
 
-    public function deleteByProjectId($projectId)
+    public function deleteByIssueId($issueId)
     {
-        return $this->model()->where('project_id', $projectId)->delete();
+        return $this->model()->where('issue_id', $issueId)->delete();
+    }
+
+    public function deleteByCategoryId($categoryId)
+    {
+        return $this->model()->where('category_id', $categoryId)->delete();
     }
 
     public function createModel($params)
@@ -36,24 +41,9 @@ class ProjectUserRepository
         return $this->model()->create($params);
     }
 
-    public function addWithProjectQuery($query)
+    public function addWhereIssueIdQuery($query, $issueId)
     {
-        return $query->with('project');
-    }
-
-    public function addWithUserQuery($query)
-    {
-        return $query->with('user');
-    }
-
-    public function addWhereProjectIdQuery($query, $projectId)
-    {
-        return $query->where('project_id', $projectId);
-    }
-
-    public function addWhereUserIdQuery($query, $userId)
-    {
-        return $query->where('user_id', $userId);
+        return $query->where('issue_id', $issueId);
     }
 
     public function orderByQuery($query, $column, $order)

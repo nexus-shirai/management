@@ -29,14 +29,15 @@ class StatusRequest extends FormRequest
                 'required',
                 'max:255',
                 Rule::unique('statuses')->ignore($this->status_id, 'status_id')
-            ]
+            ],
+            'hex_color' => ['required', 'max:7']
         ];
 
         if ($this->isMethod('put')) {
-            $newRules = [
+            $editRules = [
                 'status_id' => ['required', 'integer'],
             ];
-            $rules = array_merge($newRules,  $rules);
+            $rules = array_merge($editRules,  $rules);
         }
 
         return $rules;

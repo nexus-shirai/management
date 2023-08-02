@@ -19,7 +19,7 @@ class MilestoneService
 
         array_push($appendQuerys, function ($query) {
             $column = "milestone_id";
-            $order = "DESC";
+            $order = "ASC";
             return $this->repository->orderByQuery($query, $column, $order);
         });
 

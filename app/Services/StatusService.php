@@ -19,7 +19,7 @@ class StatusService
 
         array_push($appendQuerys, function ($query) {
             $column = "status_id";
-            $order = "DESC";
+            $order = "ASC";
             return $this->repository->orderByQuery($query, $column, $order);
         });
 

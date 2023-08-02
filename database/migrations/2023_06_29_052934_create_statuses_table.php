@@ -16,6 +16,7 @@ class CreateStatusesTable extends Migration
         Schema::create('statuses', function (Blueprint $table) {
             $table->bigIncrements('status_id')->comment('状態ID');
             $table->string('status_name')->unique()->comment('状態名');
+            $table->string('hex_color', 7)->unique()->comment('カラーコード');
         });
     }
 

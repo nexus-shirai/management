@@ -27,19 +27,28 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('index');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/projects', [ProjectController::class, 'index'])->name('projects');
+    Route::get('/search-projects', [ProjectController::class, 'search'])->name('search-projects');
     Route::get('/create-project', [ProjectController::class, 'create'])->name('create-project');
     Route::post('/create-project', [ProjectController::class, 'store']);
     Route::get('/view-project/{project_id}', [ProjectController::class, 'view'])->name('view-project');
     Route::get('/edit-project/{project_id}', [ProjectController::class, 'edit'])->name('edit-project');
     Route::put('/edit-project/{project_id}', [ProjectController::class, 'update']);
     Route::delete('/delete-project/{project_id}', [ProjectController::class, 'delete'])->name('delete-project');
-    Route::get('/issues', [IssueController::class, 'index'])->name('issues');
-    Route::get('/create-issue', [IssueController::class, 'create'])->name('create-issue');
-    Route::post('/create-issue', [IssueController::class, 'store']);
-    Route::get('/view-issue/{issue_id}', [IssueController::class, 'view'])->name('view-issue');
-    Route::get('/edit-issue/{issue_id}', [IssueController::class, 'edit'])->name('edit-issue');
+    
+    Route::get('/project/{project_id}/issues', [IssueController::class, 'index'])->name('issues');
+    Route::get('/project/{project_id}/search-issues', [IssueController::class, 'search'])->name('search-issues');
+    Route::get('/project/{project_id}/create-issue', [IssueController::class, 'create'])->name('create-issue');
+    Route::post('/project/{project_id}/create-issue', [IssueController::class, 'store']);
+    Route::get('/project/{project_id}/view-issue/{issue_id}', [IssueController::class, 'view'])->name('view-issue');
+    Route::get('/project/{project_id}/edit-issue/{issue_id}', [IssueController::class, 'edit'])->name('edit-issue');
+    Route::put('/project/{project_id}/edit-issue/{issue_id}', [IssueController::class, 'update']);
+    Route::delete('/project/{project_id}/delete-issue/{issue_id}', [IssueController::class, 'delete'])->name('delete-issue');
+
     Route::get('/board', [BoardController::class, 'index'])->name('board');
     Route::get('/gantt-chart', [GanttChartController::class, 'index'])->name('gantt-chart');
+    
     Route::get('/create-user', [UserController::class, 'create'])->name('create-user');
     Route::post('/create-user', [UserController::class, 'store']);
 

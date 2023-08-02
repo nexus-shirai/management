@@ -39,8 +39,9 @@ const grid_columns = [
 ];
 
 const goToEdit = (version_id) => {
-    location.href = route('edit-version', { 'version_id': version_id });
+    form.get(route('edit-version', { 'version_id': version_id }));
 };
+
 const onClickDelete = (version_id) => {
     Swal.fire({
         title: '削除しますか?',

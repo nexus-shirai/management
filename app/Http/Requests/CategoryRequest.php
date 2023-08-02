@@ -33,10 +33,10 @@ class CategoryRequest extends FormRequest
         ];
 
         if ($this->isMethod('put')) {
-            $newRules = [
+            $editRules = [
                 'category_id' => ['required', 'integer'],
             ];
-            $rules = array_merge($newRules,  $rules);
+            $rules = array_merge($editRules,  $rules);
         }
 
         return $rules;

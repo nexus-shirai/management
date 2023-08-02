@@ -33,10 +33,10 @@ class MilestoneRequest extends FormRequest
         ];
 
         if ($this->isMethod('put')) {
-            $newRules = [
+            $editRules = [
                 'milestone_id' => ['required', 'integer'],
             ];
-            $rules = array_merge($newRules,  $rules);
+            $rules = array_merge($editRules,  $rules);
         }
 
         return $rules;
