@@ -597,12 +597,22 @@ const computeWidth = (issue, type) => {
             <!-- 担当者 -->
             <template v-if="grouping == 1">
                 <i class="fa-solid fa-circle-user"></i>
-                <span class="ms-2">{{ grouping_value.username }}</span>
+                <template v-if="Object.keys(grouping_value).length">
+                    <span class="ms-2">{{ grouping_value.username }}</span>
+                </template>
+                <template v-else>
+                    <span class="ms-2">設定なし</span>
+                </template>
             </template>
             <!-- マイルストーン -->
             <template v-else-if="grouping == 2">
                 <i class="fa-solid fa-flag"></i>
-                <span class="ms-2">{{ grouping_value.milestone_name }}</span>
+                <template v-if="Object.keys(grouping_value).length">
+                    <span class="ms-2">{{ grouping_value.milestone_name }}</span>
+                </template>
+                <template v-else>
+                    <span class="ms-2">設定なし</span>
+                </template>
             </template>
             <!-- 親課題 -->
             <template v-else-if="grouping == 3">
@@ -611,7 +621,7 @@ const computeWidth = (issue, type) => {
                     <span class="ms-2">{{ grouping_value.issue_title }} ({{ grouping_value.issue_cd }})</span>
                 </template>
                 <template v-else>
-                    <span class="ms-2">親課題</span>
+                    <span class="ms-2">設定なし</span>
                 </template>
             </template>
         </div>
@@ -644,8 +654,10 @@ const computeWidth = (issue, type) => {
                     <template v-for="issue in issues">
                         <template v-if="(status == 0 || issue.status_id == status)
                             && (grouping == 0
-                            || (grouping == 1 && grouping_value.user_id == issue.assignee_id)
-                            || (grouping == 2 && grouping_value.milestone_id == issue.milestone_id)
+                            || (grouping == 1 && grouping_value == null && issue.assignee_id == null)
+                            || (grouping == 1 && grouping_value != null && grouping_value.user_id == issue.assignee_id)
+                            || (grouping == 2 && grouping_value == null && issue.milestone_id == null)
+                            || (grouping == 2 && grouping_value != null && grouping_value.milestone_id == issue.milestone_id)
                             || (grouping == 3 && grouping_value == null && issue.parent_issue_id == null)
                             || (grouping == 3 && grouping_value != null && grouping_value.issue_id == issue.parent_issue_id))">
 
@@ -658,7 +670,7 @@ const computeWidth = (issue, type) => {
                                                 {{ issue.issue_title }} ({{ issue.issue_cd }})
                                             </Link>
                                         </div>
-                                        <div>{{ issue.assignee.username }}</div>
+                                        <div>{{ issue.assignee ? issue.assignee.username : '設定なし' }}</div>
                                     </div>
                                 </td>
                             </tr>
@@ -694,8 +706,10 @@ const computeWidth = (issue, type) => {
                         
                         <template v-if="(status == 0 || issue.status_id == status)
                             && (grouping == 0
-                            || (grouping == 1 && grouping_value.user_id == issue.assignee_id)
-                            || (grouping == 2 && grouping_value.milestone_id == issue.milestone_id)
+                            || (grouping == 1 && grouping_value == null && issue.assignee_id == null)
+                            || (grouping == 1 && grouping_value != null && grouping_value.user_id == issue.assignee_id)
+                            || (grouping == 2 && grouping_value == null && issue.milestone_id == null)
+                            || (grouping == 2 && grouping_value != null && grouping_value.milestone_id == issue.milestone_id)
                             || (grouping == 3 && grouping_value == null && issue.parent_issue_id == null)
                             || (grouping == 3 && grouping_value != null && grouping_value.issue_id == issue.parent_issue_id))">
                             

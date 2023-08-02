@@ -53,7 +53,7 @@ const onChangeGrouping = () => {
         }
     });
     
-    if (grouping.value == 3) { // 親課題
+    if (grouping.value) { // 親課題
         groups.value.unshift({}); // 親課題なし
     }
 

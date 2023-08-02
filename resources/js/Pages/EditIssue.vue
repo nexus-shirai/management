@@ -186,7 +186,7 @@ const onChangeRank = () => {
 const onClickDelete = () => {
     Swal.fire({
         title: '削除しますか?',
-        text: "戻すことはできません。",
+        html: "子課題・孫課題も削除対象になります。<br/>戻すことはできません。",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3B82F6',
@@ -267,9 +267,7 @@ const onClickDelete = () => {
             </div>
             
             <div class="mb-2 flex">
-                <div class="font-bold w-[135px]">
-                    課題の詳細<sup class="text-red-500 ms-2"><i class="fa-solid fa-asterisk"></i></sup>
-                </div>
+                <div class="font-bold w-[135px]">課題の詳細</div>
                 <div class="flex-1">
                     <textarea v-model="form.issue_desc" rows="3" placeholder="課題の詳細" class="w-full rounded py-1" 
                         :class="form.errors.issue_desc ? 'border-red-500' : ''" :disabled="props.type == 'View'"></textarea>
@@ -401,9 +399,7 @@ const onClickDelete = () => {
 
                     <div class="ms-5">
                         <div class="flex mb-2">
-                            <div class="font-bold w-[135px]">
-                                担当者<sup class="text-red-500 ms-2"><i class="fa-solid fa-asterisk"></i></sup>
-                            </div>
+                            <div class="font-bold w-[135px]">担当者</div>
                             <div>
                                 <select v-model="form.assignee_id" class="rounded py-1 min-w-[225px]"
                                     :class="form.errors.assignee_id ? 'border-red-500' : ''" :disabled="props.type == 'View'">
@@ -418,9 +414,7 @@ const onClickDelete = () => {
                             </div>
                         </div>
                         <div class="flex mb-2">
-                            <div class="font-bold w-[135px]">
-                                マイルストーン<sup class="text-red-500 ms-2"><i class="fa-solid fa-asterisk"></i></sup>
-                            </div>
+                            <div class="font-bold w-[135px]">マイルストーン</div>
                             <div>
                                 <select v-model="form.milestone_id" class="rounded py-1 min-w-[225px]"
                                     :class="form.errors.milestone_id ? 'border-red-500' : ''" :disabled="props.type == 'View'">
@@ -457,9 +451,7 @@ const onClickDelete = () => {
                             </div>
                         </div>
                         <div class="flex mb-2">
-                            <div class="font-bold w-[135px]">
-                                バージョン<sup class="text-red-500 ms-2"><i class="fa-solid fa-asterisk"></i></sup>
-                            </div>
+                            <div class="font-bold w-[135px]">バージョン</div>
                             <div>
                                 <select v-model="form.version_id" class="rounded py-1 min-w-[225px]"
                                     :class="form.errors.version_id ? 'border-red-500' : ''" :disabled="props.type == 'View'">
@@ -493,9 +485,7 @@ const onClickDelete = () => {
                             </div>
                         </div>
                         <div class="flex mb-2">
-                            <div class="font-bold w-[135px]">
-                                カテゴリー<sup class="text-red-500 ms-2"><i class="fa-solid fa-asterisk"></i></sup>
-                            </div>
+                            <div class="font-bold w-[135px]">カテゴリー</div>
                             <div>
                                 <MultiSelect
                                     v-model="form.issue_categories"

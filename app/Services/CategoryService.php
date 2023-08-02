@@ -77,6 +77,6 @@ class CategoryService
     public function delete($categoryId)
     {
         $this->repository->deleteModelById($categoryId);
-        // $this->issueCategoryService->deleteByCategoryId($categoryId);
+        $this->issueCategoryService->deleteByCategoryId($categoryId);
     }
 }

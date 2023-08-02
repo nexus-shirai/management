@@ -64,6 +64,7 @@ class Issue extends Model
         'kind_id',
         'issue_rank',
         'parent_issue_id',
+        'create_user_id'
     ];
 
     /**

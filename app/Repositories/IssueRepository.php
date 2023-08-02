@@ -31,6 +31,11 @@ class IssueRepository
         return $this->findModelById($id)->delete();
     }
 
+    public function deleteByProjectId($projectId)
+    {
+        return $this->model()->where('project_id', $projectId)->delete();
+    }
+
     public function get($query)
     {
         return $query->get();
@@ -79,6 +84,16 @@ class IssueRepository
     public function addWhereNotIssueIdQuery($query, $issueId)
     {
         return $query->where('issue_id', '<>', $issueId);
+    }
+
+    public function addWhereMilestoneIdQuery($query, $milestoneId)
+    {
+        return $query->where('milestone_id', $milestoneId);
+    }
+
+    public function addWhereVersionIdQuery($query, $versionId)
+    {
+        return $query->where('version_id', $versionId);
     }
 
     public function addWithKindQuery($query)

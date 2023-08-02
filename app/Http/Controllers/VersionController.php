@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\VersionRequest;
+use App\Services\IssueService;
 use App\Services\VersionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -11,9 +12,14 @@ use Inertia\Inertia;
 class VersionController extends Controller
 {
     protected $service;
+    protected $issueService;
 
-    function __construct(VersionService $service) {
+    function __construct(
+        VersionService $service,
+        IssueService $issueService
+    ) {
         $this->service = $service;
+        $this->issueService = $issueService;
     }
 
     public function index() {
@@ -66,8 +72,18 @@ class VersionController extends Controller
 
     public function delete(Request $request) {
         $versionId = $request->version_id;
+
         DB::beginTransaction();
         $this->service->delete($versionId);
+
+        $data['version_id'] = $versionId;
+        $issues = $this->issueService->getIssues($data);
+        foreach ($issues as $issue) {
+            $data = [];
+            $data['issue_id'] = $issue['issue_id'];
+            $data['version_id'] = null;
+            $issues = $this->issueService->updateIssue($data);
+        }
         DB::commit();
 
         return redirect()->route('versions')

@@ -75,4 +75,9 @@ class ProjectUserService
     {
         $this->repository->deleteByProjectId($projectId);
     }
+
+    public function deleteByUserId($userId)
+    {
+        $this->repository->deleteByUserId($userId);
+    }
 }

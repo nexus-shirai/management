@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\MilestoneRequest;
+use App\Services\IssueService;
 use App\Services\MilestoneService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -11,9 +12,14 @@ use Inertia\Inertia;
 class MilestoneController extends Controller
 {
     protected $service;
+    protected $issueService;
 
-    function __construct(MilestoneService $service) {
+    function __construct(
+        MilestoneService $service,
+        IssueService $issueService
+    ) {
         $this->service = $service;
+        $this->issueService = $issueService;
     }
 
     public function index() {
@@ -65,8 +71,18 @@ class MilestoneController extends Controller
 
     public function delete(Request $request) {
         $milestoneId = $request->milestone_id;
+        
         DB::beginTransaction();
         $this->service->delete($milestoneId);
+
+        $data['milestone_id'] = $milestoneId;
+        $issues = $this->issueService->getIssues($data);
+        foreach ($issues as $issue) {
+            $data = [];
+            $data['issue_id'] = $issue['issue_id'];
+            $data['milestone_id'] = null;
+            $issues = $this->issueService->updateIssue($data);
+        }
         DB::commit();
 
         return redirect()->route('milestones')

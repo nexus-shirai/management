@@ -31,9 +31,8 @@ if (props.statuses) {
 
 if (props.milestones) {
     props.milestones.forEach(milestone => {
-        milestones[milestone.milestone_id] = [];
         let total_milestone_issues = props.project.issues.filter(issue => issue.milestone_id == milestone.milestone_id).length;
-
+        milestones[milestone.milestone_id] = {};
         milestones[milestone.milestone_id]['milestone_name'] = milestone.milestone_name;
         milestones[milestone.milestone_id]['issues'] = [];
 
@@ -41,20 +40,45 @@ if (props.milestones) {
             let count = props.project.issues.filter(issue => issue.status_id == status.status_id && issue.milestone_id == milestone.milestone_id).length;
             let percentage = (count / total_milestone_issues) * 100;
 
-            milestones[milestone.milestone_id]['issues'].push({
+            if (!isNaN(percentage)) {
+                milestones[milestone.milestone_id]['issues'].push({
+                    'hex_color' : status.hex_color,
+                    'percentage': percentage
+                });
+
+                // hardcoded complete flg to 5
+                if (status.status_id == 5) {
+                    milestones[milestone.milestone_id]['completed_percentage'] = percentage
+                }
+            }
+        });
+    });
+
+    milestones.unshift({
+        'milestone_name': '設定なし',
+        'issues': []
+    });
+
+    let total_milestone_issues = props.project.issues.filter(issue => issue.milestone_id == null).length;
+    props.statuses.forEach(status => {
+        let count = props.project.issues.filter(issue => issue.status_id == status.status_id && issue.milestone_id == null).length;
+        let percentage = (count / total_milestone_issues) * 100;
+
+        if (!isNaN(percentage)) {
+            milestones[0].issues.push({
                 'hex_color' : status.hex_color,
                 'percentage': percentage
             });
 
             // hardcoded complete flg to 5
             if (status.status_id == 5) {
-                milestones[milestone.milestone_id]['completed_percentage'] = percentage
+                milestones[0]['completed_percentage'] = percentage
             }
-        });
+        }
     });
+
     milestones = milestones.filter(Boolean);
 }
-
 
 const user_options = ref([]);
 
@@ -107,7 +131,7 @@ const submit = () => {
 const onClickDelete = () => {
     Swal.fire({
         title: '削除しますか?',
-        text: "戻すことはできません。",
+        html: "紐づいている課題も削除対象になります。<br/>戻すことはできません。",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3B82F6',
@@ -166,67 +190,84 @@ const onClickDelete = () => {
             </div>
             
             <template v-if="props.type == 'View'">
-                <div class="flex mx-0 pb-7">
-                    <div class="flex-1 px-2">
-                        <div class="font-bold mb-2">状態</div>
-                        <div class="bg-slate-200 px-3 py-3">
-                            <div class="flex">
-                                <template v-for="status in statuses">
-                                    <div class="inline-block h-[30px]"
-                                        :style="{
-                                        width: ((status.count / total_issues) * 100) + '%',
-                                        backgroundColor: status.hex_color}"></div>
-                                </template>
-                            </div>
-                            <div class="mt-3">
-                                <template v-for="status in statuses">
-                                    <div class="inline-block text-center mb-1">
-                                        <div><small>{{ status.status_name }}</small></div>
-                                        <div>
-                                            <span class="rounded-full inline-block min-w-[70px] pb-1 me-2"
-                                                :style="{ backgroundColor: status.hex_color }">
-                                                <small>{{ status.count }}</small>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </template>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="flex-1 px-2">
-                        <div class="font-bold mb-2">マイルストーン</div>
-                        <div class="bg-slate-200 px-3 py-3">
-
-                            <template v-for="milestone in milestones">
-                                <div class="mb-2">
-                                    <div class="font-bold">{{ milestone.milestone_name }}</div>
-                                    <div class="flex">
-                                        <div style="width: 82%;">
-                                            <div class="flex">
-                                                <template v-for="issue in milestone.issues">
-                                                    <div class="inline-block h-[30px]"
-                                                        :style="{ backgroundColor: issue.hex_color, width: issue.percentage + '%' }">
-                                                    </div>
-                                                </template>
-                                            </div>
-                                        </div>
-                                        <div style="width: 18%;">
-                                            <div class="text-end">
-                                                <small>{{ milestone.completed_percentage }}%<span class="ms-1">完了</span></small>
-                                            </div>
-                                        </div>
-                                    </div>
+                <template v-if="props.project.issues.length">
+                    <div class="flex mx-0 pb-7">
+                        <div class="flex-1 px-2">
+                            <div class="font-bold mb-2">状態</div>
+                            <div class="bg-slate-200 px-3 py-3">
+                                <div class="flex">
+                                    <template v-for="status in statuses">
+                                        <div class="inline-block h-[30px]"
+                                            :style="{
+                                            width: ((status.count / total_issues) * 100) + '%',
+                                            backgroundColor: status.hex_color}"></div>
+                                    </template>
                                 </div>
-                            </template>
+                                <div class="mt-3">
+                                    <template v-for="status in statuses">
+                                        <div class="inline-block text-center mb-1">
+                                            <div><small>{{ status.status_name }}</small></div>
+                                            <div>
+                                                <span class="rounded-full inline-block min-w-[70px] pb-1 me-2"
+                                                    :style="{ backgroundColor: status.hex_color }">
+                                                    <small>{{ status.count }}</small>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex-1 px-2">
+                            <div class="font-bold mb-2">マイルストーン</div>
+                            <div class="bg-slate-200 px-3 py-3">
+                                <template v-for="milestone in milestones">
+                                    <div class="mb-2">
+                                        <div>
+                                            <span class="font-bold">{{ milestone.milestone_name }}</span>
+                                            <template v-if="milestone.issues.length == 0">
+                                                <small class="ms-2">（0件）</small>
+                                            </template>
+                                        </div>
+                                        <template v-if="milestone.issues.length">
+                                            <div class="flex">
+                                                <div style="width: 82%;">
+                                                    <div class="flex">
+                                                        <template v-for="issue in milestone.issues">
+                                                            <div class="inline-block h-[30px]"
+                                                                :style="{ backgroundColor: issue.hex_color, width: issue.percentage + '%' }">
+                                                            </div>
+                                                        </template>
+                                                    </div>
+                                                </div>
+                                                <div style="width: 18%;">
+                                                    <div class="text-end">
+                                                        <small>{{ milestone.completed_percentage }}%<span class="ms-1">完了</span></small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </template>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </template>
+                <template v-else>
+                    <div class="mb-7">
+                        <div class="bg-white text-center py-3">
+                            まだ課題が作成していません。<br/>
+                            <Link :href="route('issues', { 'project_id': props.project.project_id })"
+                                class="text-blue-700 hover:underline font-bold">
+                                課題の追加
+                            </Link>を行ってください。
+                        </div>
+                    </div>
+                </template>
             </template>
 
             <form @submit.prevent="submit">
-
-
                 <div class="mb-2 flex">
                     <div class="font-bold w-[170px]">
                         プロジェクトコード<sup class="text-red-500 ms-2"><i class="fa-solid fa-asterisk"></i></sup>

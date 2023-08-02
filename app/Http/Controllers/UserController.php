@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
 use App\Providers\RouteServiceProvider;
+use App\Services\IssueService;
+use App\Services\ProjectUserService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -12,9 +14,17 @@ use Inertia\Inertia;
 class UserController extends Controller
 {
     protected $service;
+    protected $issueService;
+    protected $projectUserService;
 
-    function __construct(UserService $service) {
+    function __construct(
+        UserService $service,
+        IssueService $issueService,
+        ProjectUserService $projectUserService
+    ) {
         $this->service = $service;
+        $this->issueService = $issueService;
+        $this->projectUserService = $projectUserService;
     }
 
     public function index() {
@@ -67,8 +77,20 @@ class UserController extends Controller
 
     public function delete(Request $request) {
         $userId = $request->user_id;
+
         DB::beginTransaction();
         $this->service->delete($userId);
+
+        $this->projectUserService->deleteByUserId($userId);
+        
+        $data['assignee_id'] = $userId;
+        $issues = $this->issueService->getIssues($data);
+        foreach ($issues as $issue) {
+            $data = [];
+            $data['issue_id'] = $issue['issue_id'];
+            $data['assignee_id'] = null;
+            $issues = $this->issueService->updateIssue($data);
+        }
         DB::commit();
 
         return redirect()->route('users')
