@@ -21,4 +21,9 @@ class IssueCategoryService
     {
         $this->repository->deleteByIssueId($issueId);
     }
+    
+    // public function deleteByCategoryId($categoryId)
+    // {
+    //     $this->repository->deleteByCategoryId($categoryId);
+    // }
 }

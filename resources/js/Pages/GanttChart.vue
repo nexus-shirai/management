@@ -52,12 +52,12 @@ const onChangeGrouping = () => {
             }
         }
     });
-
-    groups.value = groups.value.filter(Boolean);
     
     if (grouping.value == 3) { // 親課題
-        groups.value.unshift(null); // 親課題なし
+        groups.value.unshift({}); // 親課題なし
     }
+
+    groups.value = groups.value.filter(Boolean);
 }
 
 let eventSource = null;
@@ -76,7 +76,7 @@ const sync = () => {
                 }
 
                 axios
-                    .get(route('fetch-new-data', { 'project_id': props.project.project_id }))
+                    .get(route('fetch-chart-data', { 'project_id': props.project.project_id }))
                     .then(response => {
                         issues.value = response.data;
                         onChangeGrouping();
@@ -89,6 +89,7 @@ const sync = () => {
             eventSource.close();
             console.log(event);
             console.log(eventSource);
+            setTimeout(sync, 5000);
         }
     } else {
         Swal.fire({
@@ -111,11 +112,17 @@ onMounted(() => {
     <AppHeader :common="props.common" />
 
     <main class="container flex-1 py-5 mx-auto max-w-[1000px]">
+        <div>
+            <Link :href="route('view-project', { 'project_id': props.project.project_id })">
+                <button class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4">戻る</button>
+            </Link>
+        </div>
+        
         <div class="bg-slate-100 pt-2 pb-4 px-3 mt-2">
             <!-- breadcrumbs -->
             <div class="font-bold mt-2 mb-4">
                 <Link :href="route('projects')" class="font-bold text-blue-700 hover:underline">
-                    プロジェクト
+                    プロジェクト一覧
                 </Link>
                 <span class="ms-4"><i class="fa-solid fa-angle-right"></i></span>
                 <Link :href="route('view-project', { project_id: props.project.project_id })"

@@ -11,18 +11,18 @@ const props = defineProps({
   common: Object
 });
 
-const kindTableRef = ref();
+const userTableRef = ref();
 const form = useForm({});
 
 const grid_columns = [
     {
-        name: '種別名',
-        id: 'kind_name',
+        name: 'ユーザー名',
+        id: 'username',
         sort: true
     },
     {
         name: 'アクション',
-        id: 'kind_id',
+        id: 'user_id',
         formatter: (_, row) => {
             let buttons = [];
             buttons.push(h('button', {
@@ -38,11 +38,11 @@ const grid_columns = [
     }
 ];
 
-const goToEdit = (kind_id) => {
-    form.get(route('edit-kind', { 'kind_id': kind_id }));
+const goToEdit = (user_id) => {
+    form.get(route('edit-user', { 'user_id': user_id }));
 };
 
-const onClickDelete = (kind_id) => {
+const onClickDelete = (user_id) => {
     Swal.fire({
         title: '削除しますか?',
         text: "戻すことはできません。",
@@ -54,9 +54,9 @@ const onClickDelete = (kind_id) => {
         cancelButtonText: 'キャンセル'
     }).then((result) => {
         if (result.isConfirmed) {
-            form.delete(route('delete-kind', { 'kind_id': kind_id }), {
+            form.delete(route('delete-user', { 'user_id': user_id }), {
                 onFinish: () => {
-                    kindTableRef.value.rerender();
+                    userTableRef.value.rerender();
                 },
             });
         }
@@ -65,7 +65,7 @@ const onClickDelete = (kind_id) => {
 </script>
 
 <template>
-    <Head title="Backlog - Kinds" />
+    <Head title="Backlog - Users" />
     <AppHeader :common="props.common" />
 
     <main class="container flex-1 py-5 mx-auto max-w-[1000px]">
@@ -73,22 +73,21 @@ const onClickDelete = (kind_id) => {
             <Link :href="route('dashboard')">
                 <button class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4">戻る</button>
             </Link>
-            
-            <Link :href="route('create-kind')">
-                <button class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4">種別作成</button>
+            <Link :href="route('create-user')">
+                <button class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4">ユーザー作成</button>
             </Link>
         </div>
-
+        
         <div class="bg-slate-100 py-2 px-3 my-2">
             <!-- breadcrumbs -->
             <div class="font-bold mt-2 mb-4">
-                種別一覧
+                ユーザー一覧
             </div>
 
             <GridTable
-                id="kind_grid_table"
-                ref="kindTableRef"
-                :data_url="route('search-kinds')"
+                id="user_grid_table"
+                ref="userTableRef"
+                :data_url="route('search-users')"
                 :grid_columns="grid_columns"
                 :auto_width="false"
                 :pagination="true" />
@@ -99,8 +98,8 @@ const onClickDelete = (kind_id) => {
 </template>
 
 <style>
-#kind_grid_table th:last-child,
-#kind_grid_table td:last-child {
+#user_grid_table th:last-child,
+#user_grid_table td:last-child {
     width: 350px !important;
     text-align: center;
 }

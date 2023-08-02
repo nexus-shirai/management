@@ -42,8 +42,19 @@ const previewText = () => form.status_name != '' ? form.status_name : '状態名
     <AppHeader :common="props.common" />
 
     <main class="container flex-1 py-5 mx-auto max-w-[1000px]">
+        <Link :href="route('statuses')">
+            <button class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4">戻る</button>
+        </Link>
+
         <form class="bg-slate-100 py-2 px-3 my-2" @submit.prevent="submit">
-            <div class="font-bold mb-5">状態{{ title }}</div>
+            <!-- breadcrumbs -->
+            <div class="font-bold mt-2 mb-4">
+                <Link :href="route('statuses')" class="font-bold text-blue-700 hover:underline">
+                    状態一覧
+                </Link>
+                <span class="ms-4"><i class="fa-solid fa-angle-right"></i></span>
+                <span class="ms-4">状態{{ title }}</span>
+            </div>
 
             <div class="mb-2 flex">
                 <div class="font-bold w-[170px]">
@@ -77,12 +88,8 @@ const previewText = () => form.status_name != '' ? form.status_name : '状態名
             </div>
 
             <div class="mt-5 mb-3 text-center">
-                <Link :href="route('statuses')">
-                    <button type="button" class="bg-slate-300 hover:bg-slate-400 rounded py-1 px-4">戻る</button>
-                </Link>
-                
                 <button v-if="type == 'Create' || type == 'Edit'" type="submit"
-                    class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4 ms-2">
+                    class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4">
                     <template v-if="type == 'Create'">
                         保存
                     </template>

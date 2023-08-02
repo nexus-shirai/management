@@ -18,6 +18,10 @@ class StatusService
         $appendQuerys = [];
 
         array_push($appendQuerys, function ($query) {
+            return $this->repository->orderByQuery($query, "status_id", "ASC");
+        });
+
+        array_push($appendQuerys, function ($query) {
             return $this->repository->get($query);
         });
 

@@ -607,13 +607,12 @@ const computeWidth = (issue, type) => {
             <!-- 親課題 -->
             <template v-else-if="grouping == 3">
                 <i class="fa-sharp fa-solid fa-file"></i>
-                <template v-if="grouping_value == null">
-                    <span class="ms-2">親課題</span>
-                </template>
-                <template v-else>
+                <template v-if="Object.keys(grouping_value).length">
                     <span class="ms-2">{{ grouping_value.issue_title }} ({{ grouping_value.issue_cd }})</span>
                 </template>
-
+                <template v-else>
+                    <span class="ms-2">親課題</span>
+                </template>
             </template>
         </div>
     </template>

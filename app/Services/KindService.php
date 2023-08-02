@@ -18,6 +18,10 @@ class KindService
         $appendQuerys = [];
 
         array_push($appendQuerys, function ($query) {
+            return $this->repository->orderByQuery($query, "kind_id", "ASC");
+        });
+
+        array_push($appendQuerys, function ($query) {
             return $this->repository->get($query);
         });
 

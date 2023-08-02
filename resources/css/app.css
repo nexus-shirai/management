@@ -10,6 +10,22 @@
     min-width: 1000px;
 }
 
+input[type="text"]:disabled,
+input[type="number"]:disabled,
+input[type="date"]:disabled,
+textarea:disabled,
+select:disabled {
+    background-color: #F1F5F9 !important;
+}
+
+input[type="radio"]:disabled:checked {
+    background-color: #94A3B8 !important;
+}
+
+input[type="radio"]:disabled {
+    border-color: #94A3B8 !important;
+}
+
 .gridjs-tbody td {
     padding-top: 8px !important;
     padding-bottom: 8px !important;

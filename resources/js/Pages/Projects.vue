@@ -45,12 +45,21 @@ const goToDetail = (project_id) => {
     <AppHeader :common="props.common" />
 
     <main class="container flex-1 py-5 mx-auto max-w-[1000px]">
-        <div class="bg-slate-100 py-2 px-3 my-2">
-            <div class="font-bold mb-2">プロジェクト一覧</div>
+        <div class="flex justify-between">
+            <Link :href="route('dashboard')">
+                <button class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4">戻る</button>
+            </Link>
             
             <Link :href="route('create-project')">
-                <button class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4 ms-1">プロジェクト作成</button>
+                <button class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4 ms-2">プロジェクト作成</button>
             </Link>
+        </div>
+
+        <div class="bg-slate-100 py-2 px-3 my-2">
+            <!-- breadcrumbs -->
+            <div class="font-bold mt-2 mb-4">
+                <div class="font-bold mb-2">プロジェクト一覧</div>
+            </div>
 
             <GridTable
                 id="project_grid_table"

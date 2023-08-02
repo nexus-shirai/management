@@ -40,7 +40,9 @@ const form = useForm({
     version_id: props.issue ? props.issue.version_id : null,
     issue_categories: props.issue
         ? props.issue.issue_categories.map(issue_category => issue_category.category_id)
-        : []
+        : [],
+    timeline_flg: false,
+    status_flg: false
 });
 
 const category_options = ref([]);
@@ -65,12 +67,108 @@ if (props.type == "Create") {
 
 const submit = () => {
     if (props.type == "Create") {
-        form.post(route('create-issue', { 'project_id': props.project.project_id }));
+        form.post(route('create-issue', { 'project_id': props.project.project_id }), {
+            onFinish: () => {
+                if (form.errors.timeline) {
+                    confirmTimelineDialog(form.errors.timeline);
+                }
+                if (form.errors.status) {
+                    confirmStatusDialog();
+                }
+            },
+        });
     } else if (props.type == "Edit") {
-        form.put(route('edit-issue', { 'project_id': props.project.project_id, 'issue_id': props.issue.issue_id }));
+        form.put(route('edit-issue', { 'project_id': props.project.project_id, 'issue_id': props.issue.issue_id }), {
+            onFinish: () => {
+                if (form.errors.timeline) {
+                    confirmTimelineDialog(form.errors.timeline);
+                }
+                if (form.errors.status) {
+                    confirmStatusDialog();
+                }
+                if (form.errors.children_not_completed) {
+                    childrenNotCompletedDialog();
+                    form.status_flg = false;
+                    form.timeline_flg = false;
+                }
+            },
+        });
     } else {
         // do nothing
     }
+};
+
+const confirmTimelineDialog = (issue_rank) => {
+    let message = "";
+    switch (issue_rank) {
+        case "parent":
+            message = `親課題の期間が変更されました。<br/>
+                子課題/孫課題の期間と整合性が合わない場合、<br/>
+                親課題に合わせて自動調整されます。`;
+            break;
+        case "child":
+            message = `子課題の期間が変更されました。<br/>
+                親課題/孫課題の期間と整合性が合わない場合、<br/>
+                子課題に合わせて自動調整されます。`;
+            break;
+        case "grandchild":
+            message = `孫課題の期間が変更されました。<br/>
+                親課題/子課題の期間と整合性が合わない場合、<br/>
+                子課題に合わせて自動調整されます。`;
+            break;
+        default:
+            break;
+    }
+
+    Swal.fire({
+        title: '実行しますか？',
+        html: message,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3B82F6',
+        cancelButtonColor: '#94A3B8',
+        confirmButtonText: 'はい',
+        cancelButtonText: 'キャンセル'
+    }).then((result) => {
+        form.timeline_flg = result.isConfirmed;
+        if (result.isConfirmed) {
+            submit();
+        } else {
+            form.status_flg = result.isConfirmed;
+        }
+    });
+}
+
+const confirmStatusDialog = () => {
+    Swal.fire({
+        title: '実行しますか？',
+        html: '親課題が完了状態です。<br/>親課題を処理中に変更しますか？',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3B82F6',
+        cancelButtonColor: '#94A3B8',
+        confirmButtonText: 'はい',
+        cancelButtonText: 'キャンセル'
+    }).then((result) => {
+        form.status_flg = result.isConfirmed;
+        if (result.isConfirmed) {
+            submit();
+        } else {
+            form.timeline_flg = result.isConfirmed;
+        }
+    });
+}
+
+const childrenNotCompletedDialog = () => {
+    Swal.fire({
+        icon: 'warning',
+        toast: true,
+        showConfirmButton: false,
+        position: 'top-end',
+        timer: 2000,
+        timerProgressBar: true,
+        html: '<span class="font-bold">子課題/孫課題が未完了の為、完了に変更できません。</span>',
+    });
 };
 
 if (form.complete_reason == null) {
@@ -108,8 +206,29 @@ const onClickDelete = () => {
     <AppHeader :common="props.common" />
 
     <main class="container flex-1 py-5 mx-auto max-w-[1000px]">
+        <Link :href="route('issues', { project_id: props.project.project_id })">
+            <button class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4">戻る</button>
+        </Link>
+
         <form class="bg-slate-100 py-2 px-3 mt-2 mb-2" @submit.prevent="submit">
-            <div class="font-bold mb-5">課題{{ title }}</div>
+            <!-- breadcrumbs -->
+            <div class="font-bold mt-2 mb-4">
+                <Link :href="route('projects')" class="font-bold text-blue-700 hover:underline">
+                    プロジェクト一覧
+                </Link>
+                <span class="ms-4"><i class="fa-solid fa-angle-right"></i></span>
+                <Link :href="route('view-project', { project_id: props.project.project_id })"
+                    class="font-bold text-blue-700 hover:underline ms-4">
+                    {{ props.project.project_name }} ({{ props.project.project_cd  }})
+                </Link>
+                <span class="ms-4"><i class="fa-solid fa-angle-right"></i></span>
+                <Link :href="route('issues', { project_id: props.project.project_id })"
+                    class="font-bold text-blue-700 hover:underline ms-4">
+                    課題一覧
+                </Link>
+                <span class="ms-4"><i class="fa-solid fa-angle-right"></i></span>
+                <span class="ms-4">課題{{ title }}</span>
+            </div>
 
             <div class="mb-4 flex">
                 <div class="font-bold w-[135px]">プロジェクト</div>
@@ -414,10 +533,6 @@ const onClickDelete = () => {
             </div>
 
             <div class="mt-5 mb-3 text-center">
-                <Link :href="route('issues', { 'project_id': props.project.project_id })">
-                    <button type="button" class="bg-slate-300 hover:bg-slate-400 rounded py-1 px-4">戻る</button>
-                </Link>
-                
                 <template v-if="type == 'View'">
                     <button class="bg-red-500 hover:bg-red-700 text-white rounded py-1 px-4 ms-2"
                         type="button" @click="onClickDelete">

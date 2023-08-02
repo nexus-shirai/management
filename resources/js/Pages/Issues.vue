@@ -151,12 +151,32 @@ const filterData = () => {
                 <Link :href="route('gantt-chart', { 'project_id': props.project.project_id })">
                     <button class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4">ガントチャート</button>
                 </Link>
-                <button class="bg-slate-300 rounded py-1 px-4 ms-2" disabled><small>課題一括操作</small></button>
-                <button class="bg-slate-300 rounded py-1 px-4 ms-2" disabled><small>カレンダー取込</small></button>
+                <Link :href="route('board', { 'project_id': props.project.project_id })">
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4 ms-2">ボード</button>
+                </Link>
+                <Link :href="route('create-issue', { 'project_id': props.project.project_id })">
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4 ms-2">課題作成</button>
+                </Link>
+                <!-- <button class="bg-slate-300 rounded py-1 px-4 ms-2" disabled><small>課題一括操作</small></button>
+                <button class="bg-slate-300 rounded py-1 px-4 ms-2" disabled><small>カレンダー取込</small></button> -->
             </div>
         </div>
 
         <div class="bg-slate-100 py-2 px-3 my-2">
+            <!-- breadcrumbs -->
+            <div class="font-bold mt-2 mb-4">
+                <Link :href="route('projects')" class="font-bold text-blue-700 hover:underline">
+                    プロジェクト一覧
+                </Link>
+                <span class="ms-4"><i class="fa-solid fa-angle-right"></i></span>
+                <Link :href="route('view-project', { project_id: props.project.project_id })"
+                    class="font-bold text-blue-700 hover:underline ms-4">
+                    {{ props.project.project_name }} ({{ props.project.project_cd  }})
+                </Link>
+                <span class="ms-4"><i class="fa-solid fa-angle-right"></i></span>
+                <span class="ms-4">課題一覧</span>
+            </div>
+            
             <div class="font-bold">検索条件</div>
             <div class="bg-slate-200 py-2 px-3 my-2">
                 <div class="py-1">
@@ -242,10 +262,6 @@ const filterData = () => {
 
         <div class="bg-slate-100 py-3 px-3">
             <div class="font-bold mb-2">課題一覧</div>
-            
-            <Link :href="route('create-issue', { 'project_id': props.project.project_id })">
-                <button class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4 ms-1">課題作成</button>
-            </Link>
 
             <GridTable
                 id="issue_grid_table"

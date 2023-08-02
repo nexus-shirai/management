@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProjectRequest;
+use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use App\Services\ProjectService;
 use Illuminate\Http\Request;
@@ -31,7 +32,9 @@ class ProjectController extends Controller
         $data["project_id"] = $request->project_id;
         $data["with_project_users"] = true;
         $projectData = $this->service->getProjectData($data);
-        $users = $this->service->getGeneralUsers();
+        $data = [];
+        $data["user_type"] = User::USER_TYPE_GENERAL;
+        $users = $this->service->getUsers($data);
 
         return Inertia::render("EditProject", [
             "type" => "View",
@@ -44,7 +47,9 @@ class ProjectController extends Controller
         $data["project_id"] = $request->project_id;
         $data["with_project_users"] = true;
         $projectData = $this->service->getProjectData($data);
-        $users = $this->service->getGeneralUsers();
+        $data = [];
+        $data["user_type"] = User::USER_TYPE_GENERAL;
+        $users = $this->service->getUsers($data);
 
         return Inertia::render("EditProject", [
             "type" => "Edit",
@@ -75,7 +80,8 @@ class ProjectController extends Controller
     }
 
     public function create() {
-        $users = $this->service->getGeneralUsers();
+        $data["user_type"] = User::USER_TYPE_GENERAL;
+        $users = $this->service->getUsers($data);
         return Inertia::render("EditProject", [
             "type" => "Create",
             "users" => $users

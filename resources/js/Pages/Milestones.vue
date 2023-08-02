@@ -68,12 +68,21 @@ const onClickDelete = (milestone_id) => {
     <AppHeader :common="props.common" />
 
     <main class="container flex-1 py-5 mx-auto max-w-[1000px]">
-        <div class="bg-slate-100 py-2 px-3 my-2">
-            <div class="font-bold mb-2">マイルストーン一覧</div>
+        <div class="flex justify-between">
+            <Link :href="route('dashboard')">
+                <button class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4">戻る</button>
+            </Link>
             
             <Link :href="route('create-milestone')">
-                <button class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4 ms-1">マイルストーン作成</button>
+                <button class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4">マイルストーン作成</button>
             </Link>
+        </div>
+
+        <div class="bg-slate-100 py-2 px-3 my-2">
+            <!-- breadcrumbs -->
+            <div class="font-bold mt-2 mb-4">
+                マイルストーン一覧
+            </div>
 
             <GridTable
                 id="milestone_grid_table"
