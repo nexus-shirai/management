@@ -27,10 +27,12 @@ const props = defineProps({
             </div>
         </template>
         <template v-else>
-            <div class="bg-slate-100 py-2 px-3 hidden">
+            <div class="bg-slate-100 py-2 px-3">
                 <div class="bg-white text-center py-3">
                     まだプロジェクトに参加していません。<br/>
-                    <a href="#">プロジェクトの追加</a>を行ってください。
+                    <Link :href="route('create-project')" class="text-blue-700 hover:underline font-bold">
+                        プロジェクトの追加
+                    </Link>を行ってください。
                 </div>
             </div>
         </template>

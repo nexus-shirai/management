@@ -15,7 +15,7 @@ class CreateMilestonesTable extends Migration
     {
         Schema::create('milestones', function (Blueprint $table) {
             $table->bigIncrements('milestone_id')->comment('マイルストーンID');
-            $table->string('milestone_name')->comment('マイルストーン名');
+            $table->string('milestone_name')->unique()->comment('マイルストーン名');
         });
     }
 

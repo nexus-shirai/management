@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class ProjectRequest extends FormRequest
+class StatusRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,20 +25,16 @@ class ProjectRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'project_cd' => [
+            'status_name' => [
                 'required',
-                'max:12',
-                Rule::unique('projects')->ignore($this->project_id, 'project_id'),
-                'regex:/^[0-9A-Z_]+$/'
-            ],
-            'project_name' => ['required', 'max:255'],
-            'project_desc' => ['required', 'max:255'],
-            'project_users' => ['array', 'required'],
+                'max:255',
+                Rule::unique('statuses')->ignore($this->status_id, 'status_id')
+            ]
         ];
 
         if ($this->isMethod('put')) {
             $newRules = [
-                'project_id' => ['required', 'integer'],
+                'status_id' => ['required', 'integer'],
             ];
             $rules = array_merge($newRules,  $rules);
         }
@@ -54,10 +50,7 @@ class ProjectRequest extends FormRequest
     public function attributes()
     {
         $rules = [
-            'project_cd' => 'プロジェクトコード',
-            'project_name' => 'プロジェクト名',
-            'project_desc' => 'プロジェクト概要',
-            'project_users' => '参加ユーザー',
+            'status_name' => '状態名'
         ];
 
         return $rules;

@@ -15,7 +15,7 @@ class CreateVersionsTable extends Migration
     {
         Schema::create('versions', function (Blueprint $table) {
             $table->bigIncrements('version_id')->comment('バージョンID');
-            $table->string('version_name')->comment('バージョン名');
+            $table->string('version_name')->unique()->comment('バージョン名');
         });
     }
 
