@@ -60,6 +60,10 @@ class ProjectRepository
         return $query->with('project_users');
     }
 
+    public function addWithIssuesQuery($query) {
+        return $query->with('issues');
+    }
+
     public function getBySearchConditions(array $appendQuerys)
     {
         $query = $this->model();

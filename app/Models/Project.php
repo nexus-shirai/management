@@ -35,4 +35,12 @@ class Project extends Model
     {
         return $this->HasMany(ProjectUser::class, 'project_id', 'project_id');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function issues()
+    {
+        return $this->HasMany(Issue::class, 'project_id', 'project_id');
+    }
 }
