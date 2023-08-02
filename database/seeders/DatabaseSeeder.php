@@ -20,5 +20,6 @@ class DatabaseSeeder extends Seeder
         $this->call(StatusSeeder::class);
         $this->call(MilestoneSeeder::class);
         $this->call(VersionSeeder::class);
+        $this->call(IssueSeeder::class);
     }
 }

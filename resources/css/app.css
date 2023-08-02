@@ -10,6 +10,11 @@
     min-width: 1000px;
 }
 
+.gridjs-tbody td {
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+}
+
 @media only screen and (max-width: 1000px) {
     #app {
         overflow-x: scroll;

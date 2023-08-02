@@ -32,6 +32,7 @@ class CreateIssuesTable extends Migration
             $table->unsignedBigInteger('kind_id')->comment('種別ID');
             $table->enum('issue_rank', ['parent', 'child', 'grandchild'])->comment('課題ランク 親:parent 子:child 孫:grandchild');
             $table->unsignedBigInteger('parent_issue_id')->nullable()->comment('親課題ID');
+            $table->unsignedBigInteger('create_user_id')->nullable()->comment('作成者ID');
             $table->timestamps();
             $table->softDeletes();
         });

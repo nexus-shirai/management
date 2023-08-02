@@ -21,7 +21,6 @@ const grid_columns = [
     {
         name: '種別',
         id: 'kind',
-        // sort: true,
         formatter: (_, row) => html(
             `<span class="rounded-full px-4 whitespace-nowrap text-white"
                 title="${row.cells[0].data.kind_desc}"
@@ -45,7 +44,6 @@ const grid_columns = [
     {
         name: '優先度',
         id: 'issue_priority',
-        // sort: true,
         formatter: (_, row) => {
             switch(row.cells[3].data) {
                 case 'low':
@@ -143,6 +141,21 @@ const filterData = () => {
     <AppHeader :common="props.common" />
 
     <main class="container flex-1 py-5 mx-auto max-w-[1000px]">
+        <div class="flex justify-between">
+            <div>
+                <Link :href="route('view-project', { 'project_id': props.project.project_id })">
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4">戻る</button>
+                </Link>
+            </div>
+            <div>
+                <Link :href="route('gantt-chart')">
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white rounded py-1 px-4">ガントチャート</button>
+                </Link>
+                <button class="bg-slate-300 rounded py-1 px-4 ms-2" disabled><small>課題一括操作</small></button>
+                <button class="bg-slate-300 rounded py-1 px-4 ms-2" disabled><small>カレンダー取込</small></button>
+            </div>
+        </div>
+
         <div class="bg-slate-100 py-2 px-3 my-2">
             <div class="font-bold">検索条件</div>
             <div class="bg-slate-200 py-2 px-3 my-2">

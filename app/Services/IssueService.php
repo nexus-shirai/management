@@ -75,6 +75,13 @@ class IssueService
             });
         }
 
+        if (isset($data["assignee_or_create_user_id"])) {
+            $assigneeOrCreateUserId = $data["assignee_or_create_user_id"];
+            array_push($appendQuerys, function ($query) use($assigneeOrCreateUserId) {
+                return $this->repository->addWhereAssigneeOrCreateUserId($query, $assigneeOrCreateUserId);
+            });
+        }
+
         array_push($appendQuerys, function ($query) {
             $column = "issue_id";
             $order = "DESC";
