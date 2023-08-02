@@ -74,12 +74,6 @@ class ProjectService
         $appendQuerys = [];
 
         array_push($appendQuerys, function ($query) {
-            $column = "project_id";
-            $order = "DESC";
-            return $this->repository->orderByQuery($query, $column, $order);
-        });
-
-        array_push($appendQuerys, function ($query) {
             return $this->repository->get($query);
         });
 

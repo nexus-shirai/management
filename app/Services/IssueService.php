@@ -49,6 +49,13 @@ class IssueService
                 return $this->repository->addWhereProjectIdQuery($query, $projectId);
             });
         }
+
+        if (isset($data["assignee_id"])) {
+            $assigneeId = $data["assignee_id"];
+            array_push($appendQuerys, function ($query) use ($assigneeId) {
+                return $this->repository->addWhereAssigneeIdQuery($query, $assigneeId);
+            });
+        }
         
         if (isset($data["where_not_issue_id"])) {
             $issueId = $data["where_not_issue_id"];
@@ -75,6 +82,30 @@ class IssueService
             });
         }
 
+        if (isset($data["with_assignee"]) && $data["with_assignee"]) {
+            array_push($appendQuerys, function ($query) {
+                return $this->repository->addWithAssigneeQuery($query);
+            });
+        }
+
+        if (isset($data["with_child_issues"])) {
+            array_push($appendQuerys, function ($query) {
+                return $this->repository->addWithChildIssues($query);
+            });
+        }
+
+        if (isset($data["with_parent_issue"])) {
+            array_push($appendQuerys, function ($query) {
+                return $this->repository->addWithParentIssue($query);
+            });
+        }
+
+        if (isset($data["with_milestone"])) {
+            array_push($appendQuerys, function ($query) {
+                return $this->repository->addWithMilestone($query);
+            });
+        }
+
         if (isset($data["assignee_or_create_user_id"])) {
             $assigneeOrCreateUserId = $data["assignee_or_create_user_id"];
             array_push($appendQuerys, function ($query) use($assigneeOrCreateUserId) {
@@ -82,11 +113,12 @@ class IssueService
             });
         }
 
-        array_push($appendQuerys, function ($query) {
-            $column = "issue_id";
-            $order = "DESC";
-            return $this->repository->orderByQuery($query, $column, $order);
-        });
+        if (isset($data["lt_updated_at"])) {
+            $timestamp = $data["lt_updated_at"];
+            array_push($appendQuerys, function ($query) use($timestamp) {
+                return $this->repository->addWhereLesserThanUpdatedAt($query, $timestamp);
+            });
+        }
 
         array_push($appendQuerys, function ($query) {
             return $this->repository->get($query);
@@ -179,6 +211,11 @@ class IssueService
             ];
             $this->issueCategoryService->store($issueCategoryData);
         }
+    }
+
+    public function updatePeriod(array $data)
+    {
+        $this->updateModelById($data, $data["issue_id"]);
     }
 
     private function deleteByIssueId($issueId)

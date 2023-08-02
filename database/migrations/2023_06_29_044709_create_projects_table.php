@@ -19,6 +19,7 @@ class CreateProjectsTable extends Migration
             $table->string('project_name')->comment('プロジェクト名');
             $table->string('project_desc')->comment('プロジェクト概要');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

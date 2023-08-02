@@ -112,13 +112,16 @@ props.user_issues.forEach(issue => {
     dealine_01++;
     let today = dayjs().startOf("day");
     let end_date = dayjs(issue.end_date).startOf("day");
-    if ((end_date.isSame(today, "day") || end_date.isAfter(today, "day")) && end_date.diff(today, "day") <= 3) {
+
+    // hardcoded complete flg to 5
+    if ((end_date.isSame(today, "day") || end_date.isAfter(today, "day"))
+        && end_date.diff(today, "day") <= 3 && issue.status_id != 5) {
         dealine_02++;
     }
-    if (end_date.isSame(today, "day")) {
+    if (end_date.isSame(today, "day") && issue.status_id != 5) {
         dealine_03++;
     }
-    if (end_date.isBefore(today, "day")) {
+    if (end_date.isBefore(today, "day") && issue.status_id != 5) {
         dealine_04++;
     }
 });
@@ -136,11 +139,15 @@ const filterData = () => {
     props.user_issues.forEach(issue => {
         if (target.value == 1 && issue.assignee_id != props.common.auth_user.user_id) return;
         if (target.value == 2 && issue.create_user_id != props.common.auth_user.user_id) return;
+        
         let today = dayjs().startOf("day");
         let end_date = dayjs(issue.end_date).startOf("day");
         if (deadline.value == 2 && !((end_date.isSame(today, "day") || end_date.isAfter(today, "day")) && end_date.diff(today, "day") <= 3)) return;
         if (deadline.value == 3 && !(end_date.isSame(today, "day"))) return;
         if (deadline.value == 4 && !(end_date.isBefore(today, "day"))) return;
+
+        // hardcoded complete flg to 5
+        if (([2, 3, 4]).includes(deadline.value) && issue.status_id == 5) return;
 
         grid_data.value.push(grid_columns.map(column => issue[column.id]));
     });
